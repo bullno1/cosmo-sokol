@@ -1,0 +1,191 @@
+#!/usr/bin/env python
+
+import textwrap
+import re
+
+# ./build  2>&1 | grep -i 'undefined reference' | awk -F'`|'"'" '{print $2}' | sort -u
+FUNCTIONS = [
+    "Display *XOpenDisplay(const char *display_name)",
+    "int XCloseDisplay(Display *display)",
+    "int XFlush(Display *display)",
+    "int XNextEvent(Display *display, XEvent *event_return)",
+    "int XPending(Display *display)",
+    "Status XInitThreads()",
+    "Bool XFilterEvent(XEvent *event, Window w)",
+    "Bool XkbSetDetectableAutoRepeat(Display *display, Bool detectable, Bool *supported_rtrn)",
+    "int XSync(Display *display, Bool discard)",
+    "void XrmInitialize()",
+    "int XChangeProperty(Display *display, Window w, Atom property, Atom type, int format, int mode, const unsigned char *data, int nelements)",
+    "Status XSendEvent(Display *display, Window w, Bool propagate, long event_mask, XEvent *event_send)",
+    "int XFree(void *data)",
+    "XErrorHandler XSetErrorHandler(XErrorHandler handler)",
+    "int XConvertSelection(Display *display, Atom selection, Atom  target, Atom property, Window requestor, Time time)",
+    "int XLookupString(XKeyEvent  *event_struct,  char  *buffer_return, int  bytes_buffer,  KeySym  *keysym_return,  XComposeStatus *status_in_out)",
+    "Bool XGetEventData(Display *display, XGenericEventCookie *cookie)",
+    "void XFreeEventData(Display *display, XGenericEventCookie *cookie)",
+    "int XGetWindowProperty(Display *display, Window w, Atom property, long long_offset, long long_length, Bool delete, Atom req_type, Atom *actual_type_return, int *actual_format_return, unsigned long *nitems_return, unsigned long *bytes_after_return, unsigned char **prop_return)",
+    "int XMapWindow(Display *display, Window w)",
+    "int XUnmapWindow(Display *display, Window w)",
+    "int XRaiseWindow(Display *display, Window w)",
+    "Status XGetWindowAttributes(Display *display,  Window  w,  XWindowAttributes *window_attributes_return)",
+    "XSizeHints *XAllocSizeHints()",
+    "Bool XCheckTypedWindowEvent(Display *display, Window w, int event_type, XEvent *event_return)",
+    "Colormap XCreateColormap(Display *display, Window w, Visual *visual, int alloc)",
+    "Cursor XCreateFontCursor(Display *display, unsigned int shape)",
+    "Window XCreateWindow(Display *display, Window parent, int x, int y, unsigned int width, unsigned int height, unsigned int border_width, int depth, unsigned int class, Visual *visual, unsigned long valuemask, XSetWindowAttributes *attributes)",
+    "int XWarpPointer(Display *display, Window src_w, Window dest_w, int src_x, int src_y, unsigned int src_width, unsigned int src_height, int dest_x, int dest_y)",
+    "int XDefineCursor(Display *display, Window w, Cursor cursor)",
+    "int XDestroyWindow(Display *display, Window w)",
+    "int XFreeColormap(Display *display, Colormap colormap)",
+    "int XFreeCursor(Display *display, Cursor cursor)",
+    "KeySym *XGetKeyboardMapping(Display *display, unsigned int first_keycode, int keycode_count, int *keysyms_per_keycode_return)",
+    "Window XGetSelectionOwner(Display *display, Atom selection)",
+    "int XGrabPointer(Display *display, Window grab_window, Bool owner_events, unsigned int event_mask, int pointer_mode, int keyboard_mode, Window confine_to, Cursor cursor, Time time)",
+    "Atom XInternAtom(Display *display, const char *atom_name, Bool only_if_exists)",
+    "Status XInternAtoms(Display *display, char **names, int count, Bool only_if_exists, Atom *atoms_return)",
+    "int XSetSelectionOwner(Display *display, Atom selection, Window owner, Time time)",
+    "void XSetWMNormalHints(Display *display, Window w, XSizeHints *hints)",
+    "Status XSetWMProtocols(Display *display, Window w, Atom *protocols, int count)",
+    "int XUndefineCursor(Display *display, Window w)",
+    "int XUngrabPointer(Display *display, Time time)",
+    "void Xutf8SetWMProperties(Display *display, Window w, const char *window_name, const char *icon_name, char **argv, int argc, XSizeHints *normal_hints, XWMHints *wm_hints, XClassHint *class_hints)",
+    "void XkbFreeKeyboard(XkbDescPtr xkb, unsigned int which, Bool free_all)",
+    "void XkbFreeNames(XkbDescPtr xkb, unsigned int which, Bool free_map)",
+    "char *XResourceManagerString(Display *display)",
+    "void XrmDestroyDatabase(XrmDatabase database)",
+    "Bool XrmGetResource(XrmDatabase database, const char *str_name, const char *str_class, char **str_type_return, XrmValue *value_return)",
+    "XkbDescPtr XkbGetMap(Display *display, unsigned int which, unsigned int device_spec)",
+    "Status XkbGetNames(Display *dpy, unsigned int which, XkbDescPtr xkb)",
+    "XrmDatabase XrmGetStringDatabase(const char *data)",
+    "Bool XQueryExtension(Display *display, const char* name, int *major_opcode_return, int* first_event_return, int* first_error_return)",
+    "int XcursorGetDefaultSize(Display *dpy)",
+    "char *XcursorGetTheme(Display *dpy)",
+    "XcursorImage *XcursorImageCreate(int width, int height)",
+    "void XcursorImageDestroy(XcursorImage *image)",
+    "Cursor XcursorImageLoadCursor(Display *dpy, const XcursorImage *image)",
+    "XcursorImage *XcursorLibraryLoadImage(const char *library, const char *theme, int size)",
+    "Status XIQueryVersion(Display* dpy, int* major_version_inout, int* minor_version_inout)",
+    "int XISelectEvents(Display* dpy, Window win, XIEventMask *masks, int num_masks)",
+]
+
+def main():
+    function_specs = [
+        parse_c_signature(function)
+        for function in FUNCTIONS
+    ]
+
+    with open("x11.c", "w") as f:
+        f.write(textwrap.dedent("""
+        #include <X11/Xlib.h>
+        #include <X11/Xutil.h>
+        #include <X11/Xresource.h>
+        #include <X11/Xcursor/Xcursor.h>
+        #include <X11/extensions/XKBstr.h>
+        #include <X11/extensions/XInput2.h>
+        #include <stddef.h>
+        #include <dlfcn.h>
+
+        static void* libx11 = NULL;
+
+        """).lstrip())
+
+        # Function pointers
+        for function_spec in function_specs:
+            f.write(
+                f"static {function_spec['return_type']} "
+                f"(*proc_{function_spec['name']})("
+                f"{arg_list(function_spec['args'])}"
+                 ") = NULL;\n"
+            )
+
+        # Loader
+        f.write(textwrap.dedent("""
+        static void load_x11_shims(void) {
+            libx11 = cosmo_dlopen("libX11.so", RTLD_NOW | RTLD_GLOBAL);
+        """))
+        for function_spec in function_specs:
+            name = function_spec['name']
+            f.write(f'    proc_{name} = cosmo_dltramp(cosmo_dlsym(libx11, "{name}"));\n')
+        f.write("}\n")
+
+        # Shim
+        for function_spec in function_specs:
+            name = function_spec['name']
+            return_type = function_spec['return_type']
+            params = function_spec['args']
+
+            f.write(textwrap.dedent(f"""
+            {return_type} {name}({arg_list(params)}) {{
+                if (libx11 == NULL) {{ load_x11_shims(); }}
+
+                { 'return ' if return_type != 'void' else '' }proc_{name}({forward_list(params)});
+            }}
+            """))
+
+
+def parse_c_signature(signature):
+    # Define a regex pattern to match a C function signature
+    pattern = r"(?P<return_type>[a-zA-Z_][a-zA-Z0-9_\s\*]+\s+\**)(?P<name>[a-zA-Z_][a-zA-Z0-9_]*)\s*\((?P<args>.*)\)"
+
+    # Match the pattern with the provided signature
+    match = re.match(pattern, signature.strip())
+    assert match, "Could not parse signature"
+
+    # Extract components from named groups
+    return_type = match.group("return_type").strip()
+    name = match.group("name").strip()
+    args = match.group("args").strip()
+
+    # Process arguments into a list, handling empty argument lists
+    args_list = [arg.strip() for arg in args.split(",")] if args else []
+
+    # Further split each argument into type and name
+    processed_args = []
+    for arg in args_list:
+        if arg:  # Only process non-empty arguments
+            # Separate type and name for each argument
+            parts = arg.rsplit(" ", 1)  # Split from the right to handle cases like "int *ptr"
+            if len(parts) == 2:
+                arg_type, arg_name = parts[0].strip(), parts[1].strip()
+            else:
+                # Handle cases with unnamed parameters or pointer-only types
+                arg_type, arg_name = parts[0].strip(), None
+
+            # Pointer arg
+            if arg_name.startswith('*'):
+                new_arg_name = arg_name.lstrip('*')
+                num_stars = len(arg_name) - len(new_arg_name)
+                arg_name = new_arg_name
+                arg_type = arg_type + '*' * num_stars
+
+            processed_args.append({"type": arg_type, "name": arg_name})
+
+    return {
+        "return_type": return_type,
+        "name": name,
+        "args": processed_args
+    }
+
+
+def arg_list(params):
+    if len(params) > 0:
+        return ', '.join([
+            f"{param['type']} {param['name']}"
+            for param in params
+        ])
+    else:
+        return 'void'
+
+
+def forward_list(params):
+    if len(params) > 0:
+        return ', '.join([
+            f"{param['name']}"
+            for param in params
+        ])
+    else:
+        return ''
+
+
+if __name__ == "__main__":
+    main()

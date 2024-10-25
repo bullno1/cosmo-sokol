@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+export MANWIDTH=1000
+while read -r line
+do
+	man -P cat $line | \
+		grep $line
+done

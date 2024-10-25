@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+cosmocc \
+	-o main \
+	-I deps/sokol \
+	-I deps/cimgui \
+	-I shims/linux \
+	-mcosmo \
+	-Wall \
+	-Werror \
+	-Wno-error=array-parameter \
+	shims/linux/gl.c \
+	shims/linux/x11.c \
+	main.c

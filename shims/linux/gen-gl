@@ -1,0 +1,117 @@
+#!/usr/bin/env python
+
+import xml.etree.ElementTree as ET
+import textwrap
+
+MIN_VERSION = (4, 0)
+
+def main():
+    tree = ET.parse("gl.xml")
+    root = tree.getroot()
+
+    # Iterate versions to find required commands
+    required_commands = set()
+    for feature in root.findall(f'./feature[@api="gl"]'):
+        version = tuple(map(int, feature.get('number').split('.')))
+        if version > MIN_VERSION:
+            break
+
+        required_commands.update([
+            node.get('name')
+            for node in feature.findall('./require/command')
+        ])
+
+    # Gather specs for required commands
+    command_specs = []
+    for command in root.findall('./commands[@namespace="GL"]/command'):
+        proto = command.find('./proto')
+        name = proto.find('./name')
+        if name.text not in required_commands:
+            continue
+
+        params = []
+
+        for param in command.findall('./param'):
+            param_element = param.find('./name')
+            param_type = innertext(param, param_element)
+            params.append({
+                'name': param_element.text.strip(),
+                'type': param_type.strip(),
+            })
+
+        command_specs.append({
+            'name': name.text.strip(),
+            'return': innertext(proto, name).strip(),
+            'params': params,
+        })
+
+    # Shim generation
+    with open("gl.c", "w") as f:
+        f.write(textwrap.dedent("""
+        #include <GL/gl.h>
+        #include <stddef.h>
+        #include <dlfcn.h>
+
+        static void* libgl = NULL;
+
+        """).lstrip())
+
+        # Function pointers
+        for command_spec in command_specs:
+            f.write(
+                f"static {command_spec['return']} "
+                f"(*proc_{command_spec['name']})("
+                f"{arg_list(command_spec['params'])}"
+                 ") = NULL;\n"
+            )
+
+        # Loader
+        f.write(textwrap.dedent("""
+        static void load_gl_shims(void) {
+            libgl = cosmo_dlopen("libgl.so", RTLD_NOW | RTLD_GLOBAL);
+        """))
+        for command_spec in command_specs:
+            name = command_spec['name']
+            f.write(f'    proc_{name} = cosmo_dltramp(cosmo_dlsym(libgl, "{name}"));\n')
+        f.write("}\n")
+
+        # Shim
+        for command_spec in command_specs:
+            name = command_spec['name']
+            return_type = command_spec['return']
+            params = command_spec['params']
+
+            f.write(textwrap.dedent(f"""
+            {return_type} {name}({arg_list(params)}) {{
+                if (libgl == NULL) {{ load_gl_shims(); }}
+
+                { 'return ' if return_type != 'void' else '' }proc_{name}({forward_list(params)});
+            }}
+            """))
+
+
+def innertext(tag, exclude):
+    return (tag.text or '') + ''.join(innertext(e, exclude) for e in tag if e != exclude) + (tag.tail or '')
+
+
+def arg_list(params):
+    if len(params) > 0:
+        return ', '.join([
+            f"{param['type']} {param['name']}"
+            for param in params
+        ])
+    else:
+        return 'void'
+
+
+def forward_list(params):
+    if len(params) > 0:
+        return ', '.join([
+            f"{param['name']}"
+            for param in params
+        ])
+    else:
+        return ''
+
+if __name__ == "__main__":
+    main()
