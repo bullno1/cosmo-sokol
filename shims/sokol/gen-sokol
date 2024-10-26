@@ -67,7 +67,7 @@ SOKOL_FUNCTIONS = [
     "const void* sapp_android_get_native_activity()",
 ]
 
-PLATFORMS = ["Linux"]
+PLATFORMS = ["Linux", "Windows"]
 
 def main():
     for platform in PLATFORMS:
