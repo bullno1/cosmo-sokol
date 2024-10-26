@@ -1,6 +1,7 @@
 #include <GL/gl.h>
 #include <stddef.h>
 #include <dlfcn.h>
+#pragma GCC diagnostic ignored "-Warray-parameter"
 
 static void* libgl = NULL;
 
