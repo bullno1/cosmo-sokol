@@ -5,9 +5,6 @@
 //  sokol_gfx.h + sokol_imgui.h + cimgui.h
 //------------------------------------------------------------------------------
 #define SOKOL_GLCORE
-#define SOKOL_IMPL
-#define dlopen cosmo_dlopen
-#define dlsym cosmo_dlsym
 #include "sokol_app.h"
 #include "sokol_gfx.h"
 #include "sokol_log.h"
@@ -16,6 +13,7 @@
 #include "cimgui.h"
 #define SOKOL_IMGUI_IMPL
 #include "util/sokol_imgui.h"
+#include <cosmo.h>
 
 typedef struct {
     uint64_t last_time;
@@ -100,10 +98,11 @@ void input(const sapp_event* event) {
     simgui_handle_event(event);
 }
 
-sapp_desc sokol_main(int argc, char* argv[]) {
-    (void)argc;
-    (void)argv;
-    return (sapp_desc) {
+extern void cosmo_sapp_start_linux(const sapp_desc* desc);
+extern void cosmo_sapp_start_win32(const sapp_desc* desc);
+
+int main(int argc, char* argv[]) {
+    sapp_desc app = {
         .init_cb = init,
         .frame_cb = frame,
         .cleanup_cb = cleanup,
@@ -116,4 +115,6 @@ sapp_desc sokol_main(int argc, char* argv[]) {
         .enable_clipboard = true,
         .logger.func = slog_func,
     };
+
+	sapp_run(&app);
 }

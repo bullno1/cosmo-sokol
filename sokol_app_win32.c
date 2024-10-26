@@ -52,8 +52,6 @@ typedef struct tagMSG {
 #define NEARPROC
 #define FARPROC
 
-#define CreateWindowExW CreateWindowEx
-#define PeekMessageW PeekMessage
 #define WS_EX_OVERLAPPEDWINDOW (WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE)
 #define WS_EX_WINDOWEDGE 0x00000100L
 #define WS_EX_CLIENTEDGE 0x00000200L
@@ -358,6 +356,43 @@ typedef struct _ICONINFO {
 } ICONINFO;
 
 #define APIENTRY WINAPI
+
+#define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
+#define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
+#define LOWORD(l)           ((WORD)(((DWORD_PTR)(l)) & 0xffff))
+#define HIWORD(l)           ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
+#define MAKEINTRESOURCEA(i) ((LPSTR)((ULONG_PTR)((WORD)(i))))
+#define MAKEINTRESOURCEW(i) ((LPWSTR)((ULONG_PTR)((WORD)(i))))
+#define MAKEINTRESOURCE  MAKEINTRESOURCEW
+
+#define CreateWindowExW CreateWindow
+#define DefWindowProcW DefWindowProc
+#define DispatchMessageW DispatchMessage
+#define CommandLineToArgvW CommandLineToArgv
+#define DragQueryFileW DragQueryFile
+#define PeekMessageW PeekMessage
+#define GetCommandLineW GetCommandLine
+#define LoadCursorW LoadCursor
+#define LoadImageW LoadImage
+#define RegisterClassW RegisterClass
+#define SetWindowTextW SetWindowText
+#define UnregisterClassW UnregisterClass
+
+#include <stdio.h>
+#include <errno.h>
+
+static errno_t freopen_s(
+   FILE ** stream,
+   const char * fileName,
+   const char * mode,
+   FILE* oldStream
+) {
+	errno = 0;
+	*stream = freopen(fileName, mode, oldStream);
+	return errno;
+}
+
+#include <sokol_Windows.h>
 
 #define SOKOL_GLCORE
 #define _WIN32

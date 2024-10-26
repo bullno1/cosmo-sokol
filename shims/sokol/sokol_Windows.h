@@ -1,4 +1,3 @@
-
 #pragma once
 #define sapp_isvalid sapp_Windows_isvalid
 #define sapp_width sapp_Windows_width
