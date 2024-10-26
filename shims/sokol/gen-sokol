@@ -4,6 +4,7 @@ import textwrap
 import re
 
 SOKOL_FUNCTIONS = [
+    # sokol_app
     "bool sapp_isvalid()",
     "int sapp_width()",
     "float sapp_widthf()",
@@ -65,6 +66,139 @@ SOKOL_FUNCTIONS = [
     "int sapp_gl_get_major_version()",
     "int sapp_gl_get_minor_version()",
     "const void* sapp_android_get_native_activity()",
+    # sokol_gfx
+    "void sg_setup(const sg_desc* desc)",
+    "void sg_shutdown()",
+    "bool sg_isvalid()",
+    "void sg_reset_state_cache()",
+    "sg_trace_hooks sg_install_trace_hooks(const sg_trace_hooks* trace_hooks)",
+    "void sg_push_debug_group(const char* name)",
+    "void sg_pop_debug_group()",
+    "bool sg_add_commit_listener(sg_commit_listener listener)",
+    "bool sg_remove_commit_listener(sg_commit_listener listener)",
+    "sg_buffer sg_make_buffer(const sg_buffer_desc* desc)",
+    "sg_image sg_make_image(const sg_image_desc* desc)",
+    "sg_sampler sg_make_sampler(const sg_sampler_desc* desc)",
+    "sg_shader sg_make_shader(const sg_shader_desc* desc)",
+    "sg_pipeline sg_make_pipeline(const sg_pipeline_desc* desc)",
+    "sg_attachments sg_make_attachments(const sg_attachments_desc* desc)",
+    "void sg_destroy_buffer(sg_buffer buf)",
+    "void sg_destroy_image(sg_image img)",
+    "void sg_destroy_sampler(sg_sampler smp)",
+    "void sg_destroy_shader(sg_shader shd)",
+    "void sg_destroy_pipeline(sg_pipeline pip)",
+    "void sg_destroy_attachments(sg_attachments atts)",
+    "void sg_update_buffer(sg_buffer buf, const sg_range* data)",
+    "void sg_update_image(sg_image img, const sg_image_data* data)",
+    "int sg_append_buffer(sg_buffer buf, const sg_range* data)",
+    "bool sg_query_buffer_overflow(sg_buffer buf)",
+    "bool sg_query_buffer_will_overflow(sg_buffer buf, size_t size)",
+    "void sg_begin_pass(const sg_pass* pass)",
+    "void sg_apply_viewport(int x, int y, int width, int height, bool origin_top_left)",
+    "void sg_apply_viewportf(float x, float y, float width, float height, bool origin_top_left)",
+    "void sg_apply_scissor_rect(int x, int y, int width, int height, bool origin_top_left)",
+    "void sg_apply_scissor_rectf(float x, float y, float width, float height, bool origin_top_left)",
+    "void sg_apply_pipeline(sg_pipeline pip)",
+    "void sg_apply_bindings(const sg_bindings* bindings)",
+    "void sg_apply_uniforms(sg_shader_stage stage, int ub_index, const sg_range* data)",
+    "void sg_draw(int base_element, int num_elements, int num_instances)",
+    "void sg_end_pass()",
+    "void sg_commit()",
+    "sg_desc sg_query_desc()",
+    "sg_backend sg_query_backend()",
+    "sg_features sg_query_features()",
+    "sg_limits sg_query_limits()",
+    "sg_pixelformat_info sg_query_pixelformat(sg_pixel_format fmt)",
+    "int sg_query_row_pitch(sg_pixel_format fmt, int width, int row_align_bytes)",
+    "int sg_query_surface_pitch(sg_pixel_format fmt, int width, int height, int row_align_bytes)",
+    "sg_resource_state sg_query_buffer_state(sg_buffer buf)",
+    "sg_resource_state sg_query_image_state(sg_image img)",
+    "sg_resource_state sg_query_sampler_state(sg_sampler smp)",
+    "sg_resource_state sg_query_shader_state(sg_shader shd)",
+    "sg_resource_state sg_query_pipeline_state(sg_pipeline pip)",
+    "sg_resource_state sg_query_attachments_state(sg_attachments atts)",
+    "sg_buffer_info sg_query_buffer_info(sg_buffer buf)",
+    "sg_image_info sg_query_image_info(sg_image img)",
+    "sg_sampler_info sg_query_sampler_info(sg_sampler smp)",
+    "sg_shader_info sg_query_shader_info(sg_shader shd)",
+    "sg_pipeline_info sg_query_pipeline_info(sg_pipeline pip)",
+    "sg_attachments_info sg_query_attachments_info(sg_attachments atts)",
+    "sg_buffer_desc sg_query_buffer_desc(sg_buffer buf)",
+    "sg_image_desc sg_query_image_desc(sg_image img)",
+    "sg_sampler_desc sg_query_sampler_desc(sg_sampler smp)",
+    "sg_shader_desc sg_query_shader_desc(sg_shader shd)",
+    "sg_pipeline_desc sg_query_pipeline_desc(sg_pipeline pip)",
+    "sg_attachments_desc sg_query_attachments_desc(sg_attachments atts)",
+    "sg_buffer_desc sg_query_buffer_defaults(const sg_buffer_desc* desc)",
+    "sg_image_desc sg_query_image_defaults(const sg_image_desc* desc)",
+    "sg_sampler_desc sg_query_sampler_defaults(const sg_sampler_desc* desc)",
+    "sg_shader_desc sg_query_shader_defaults(const sg_shader_desc* desc)",
+    "sg_pipeline_desc sg_query_pipeline_defaults(const sg_pipeline_desc* desc)",
+    "sg_attachments_desc sg_query_attachments_defaults(const sg_attachments_desc* desc)",
+    "sg_buffer sg_alloc_buffer()",
+    "sg_image sg_alloc_image()",
+    "sg_sampler sg_alloc_sampler()",
+    "sg_shader sg_alloc_shader()",
+    "sg_pipeline sg_alloc_pipeline()",
+    "sg_attachments sg_alloc_attachments()",
+    "void sg_dealloc_buffer(sg_buffer buf)",
+    "void sg_dealloc_image(sg_image img)",
+    "void sg_dealloc_sampler(sg_sampler smp)",
+    "void sg_dealloc_shader(sg_shader shd)",
+    "void sg_dealloc_pipeline(sg_pipeline pip)",
+    "void sg_dealloc_attachments(sg_attachments attachments)",
+    "void sg_init_buffer(sg_buffer buf, const sg_buffer_desc* desc)",
+    "void sg_init_image(sg_image img, const sg_image_desc* desc)",
+    "void sg_init_sampler(sg_sampler smg, const sg_sampler_desc* desc)",
+    "void sg_init_shader(sg_shader shd, const sg_shader_desc* desc)",
+    "void sg_init_pipeline(sg_pipeline pip, const sg_pipeline_desc* desc)",
+    "void sg_init_attachments(sg_attachments attachments, const sg_attachments_desc* desc)",
+    "void sg_uninit_buffer(sg_buffer buf)",
+    "void sg_uninit_image(sg_image img)",
+    "void sg_uninit_sampler(sg_sampler smp)",
+    "void sg_uninit_shader(sg_shader shd)",
+    "void sg_uninit_pipeline(sg_pipeline pip)",
+    "void sg_uninit_attachments(sg_attachments atts)",
+    "void sg_fail_buffer(sg_buffer buf)",
+    "void sg_fail_image(sg_image img)",
+    "void sg_fail_sampler(sg_sampler smp)",
+    "void sg_fail_shader(sg_shader shd)",
+    "void sg_fail_pipeline(sg_pipeline pip)",
+    "void sg_fail_attachments(sg_attachments atts)",
+    "void sg_enable_frame_stats()",
+    "void sg_disable_frame_stats()",
+    "bool sg_frame_stats_enabled()",
+    "sg_frame_stats sg_query_frame_stats()",
+    "const void* sg_d3d11_device()",
+    "const void* sg_d3d11_device_context()",
+    "sg_d3d11_buffer_info sg_d3d11_query_buffer_info(sg_buffer buf)",
+    "sg_d3d11_image_info sg_d3d11_query_image_info(sg_image img)",
+    "sg_d3d11_sampler_info sg_d3d11_query_sampler_info(sg_sampler smp)",
+    "sg_d3d11_shader_info sg_d3d11_query_shader_info(sg_shader shd)",
+    "sg_d3d11_pipeline_info sg_d3d11_query_pipeline_info(sg_pipeline pip)",
+    "sg_d3d11_attachments_info sg_d3d11_query_attachments_info(sg_attachments atts)",
+    "const void* sg_mtl_device()",
+    "const void* sg_mtl_render_command_encoder()",
+    "sg_mtl_buffer_info sg_mtl_query_buffer_info(sg_buffer buf)",
+    "sg_mtl_image_info sg_mtl_query_image_info(sg_image img)",
+    "sg_mtl_sampler_info sg_mtl_query_sampler_info(sg_sampler smp)",
+    "sg_mtl_shader_info sg_mtl_query_shader_info(sg_shader shd)",
+    "sg_mtl_pipeline_info sg_mtl_query_pipeline_info(sg_pipeline pip)",
+    "const void* sg_wgpu_device()",
+    "const void* sg_wgpu_queue()",
+    "const void* sg_wgpu_command_encoder()",
+    "const void* sg_wgpu_render_pass_encoder()",
+    "sg_wgpu_buffer_info sg_wgpu_query_buffer_info(sg_buffer buf)",
+    "sg_wgpu_image_info sg_wgpu_query_image_info(sg_image img)",
+    "sg_wgpu_sampler_info sg_wgpu_query_sampler_info(sg_sampler smp)",
+    "sg_wgpu_shader_info sg_wgpu_query_shader_info(sg_shader shd)",
+    "sg_wgpu_pipeline_info sg_wgpu_query_pipeline_info(sg_pipeline pip)",
+    "sg_wgpu_attachments_info sg_wgpu_query_attachments_info(sg_attachments atts)",
+    "sg_gl_buffer_info sg_gl_query_buffer_info(sg_buffer buf)",
+    "sg_gl_image_info sg_gl_query_image_info(sg_image img)",
+    "sg_gl_sampler_info sg_gl_query_sampler_info(sg_sampler smp)",
+    "sg_gl_shader_info sg_gl_query_shader_info(sg_shader shd)",
+    "sg_gl_attachments_info sg_gl_query_attachments_info(sg_attachments atts)",
 ]
 
 PLATFORMS = ["Linux", "Windows"]
@@ -77,15 +211,16 @@ def main():
             for function in SOKOL_FUNCTIONS:
                 sig = parse_c_signature(function)
                 name = sig['name']
-                f.write(f"#define {name} {name.replace('sapp', 'sapp_' + platform)}\n")
+                f.write(f"#define {name} {make_platform_name(name, platform)}\n")
 
     with open(f"sokol_cosmo.c", "w") as f:
         f.write(textwrap.dedent("""
         #include <sokol_app.h>
+        #include <sokol_gfx.h>
         #include <cosmo.h>
         #pragma GCC diagnostic ignored "-Wreturn-type"
 
-        """))
+        """).lstrip())
 
         for function in SOKOL_FUNCTIONS:
             sig = parse_c_signature(function)
@@ -95,12 +230,12 @@ def main():
 
 
             for platform in PLATFORMS:
-                platform_name = name.replace('sapp', 'sapp_' + platform)
+                platform_name = make_platform_name(name, platform)
                 f.write(f"extern {return_type} {platform_name}({arg_list(args)});\n")
 
             f.write(f"{return_type} {name}({arg_list(args)}) {{\n")
             for platform in PLATFORMS:
-                platform_name = name.replace('sapp', 'sapp_' + platform)
+                platform_name = make_platform_name(name, platform)
                 f.write(f"    if (Is{platform}()) {{\n")
                 if return_type == "void":
                     f.write(f"        {platform_name}({forward_list(args)});\n")
@@ -109,6 +244,11 @@ def main():
                     f.write(f"        return {platform_name}({forward_list(args)});\n")
                 f.write(f"    }}\n")
             f.write("}\n\n")
+
+
+def make_platform_name(name, platform):
+    return name.replace('sapp', 'sapp_' + platform, 1).replace('sg', 'sg_' + platform, 1)
+
 
 def parse_c_signature(signature):
     # Define a regex pattern to match a C function signature

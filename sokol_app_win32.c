@@ -52,6 +52,8 @@ typedef struct tagMSG {
 #define NEARPROC void*
 #define FARPROC void*
 
+#define APIENTRY WINAPI
+
 #define WS_EX_OVERLAPPEDWINDOW (WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE)
 #define WS_EX_WINDOWEDGE 0x00000100L
 #define WS_EX_CLIENTEDGE 0x00000200L
@@ -355,8 +357,6 @@ typedef struct _ICONINFO {
   HBITMAP hbmColor;
 } ICONINFO;
 
-#define APIENTRY WINAPI
-
 #define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
 #define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
 #define LOWORD(l)           ((WORD)(((DWORD_PTR)(l)) & 0xffff))
@@ -401,3 +401,4 @@ static errno_t freopen_s(
 #define SOKOL_NO_ENTRY
 #define SOKOL_IMPL
 #include "sokol_app.h"
+#include "sokol_gfx.h"
