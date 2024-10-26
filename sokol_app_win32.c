@@ -48,9 +48,9 @@ typedef struct tagMSG {
 #undef NEARPROC
 #undef FARPROC
 
-#define PROC
-#define NEARPROC
-#define FARPROC
+#define PROC void*
+#define NEARPROC void*
+#define FARPROC void*
 
 #define WS_EX_OVERLAPPEDWINDOW (WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE)
 #define WS_EX_WINDOWEDGE 0x00000100L
@@ -398,5 +398,6 @@ static errno_t freopen_s(
 
 #define SOKOL_GLCORE
 #define _WIN32
+#define SOKOL_NO_ENTRY
 #define SOKOL_IMPL
 #include "sokol_app.h"

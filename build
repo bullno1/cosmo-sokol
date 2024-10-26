@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-if ! command -v cosmocc
+if ! command -v cosmocc > /dev/null
 then
 	echo "You need to add cosmopolitan toolchain to your path:"
 	echo "export PATH=\$PATH:<path-to-cosmopolitan>/bin"
@@ -14,9 +14,10 @@ FLAGS="-I deps/sokol \
 	-I shims/linux \
 	-I shims/sokol \
 	-mcosmo \
+	-mdbg \
+	-fsanitize=undefined \
 	-Wall \
-	-Werror \
-	-Wno-error=array-parameter"
+	-Werror"
 
 WIN32_FLAGS="-I deps/sokol \
 	-I deps/cimgui \
@@ -24,6 +25,8 @@ WIN32_FLAGS="-I deps/sokol \
 	-I shims/sokol \
 	-I ${COSMO_HOME}/include/libc/nt \
 	-mcosmo \
+	-mdbg \
+	-fsanitize=undefined \
 	-Wall \
 	-Werror"
 

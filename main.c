@@ -5,6 +5,7 @@
 //  sokol_gfx.h + sokol_imgui.h + cimgui.h
 //------------------------------------------------------------------------------
 #define SOKOL_GLCORE
+#define SOKOL_NO_ENTRY
 #include "sokol_app.h"
 #include "sokol_gfx.h"
 #include "sokol_log.h"

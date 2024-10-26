@@ -1,3 +1,10 @@
 ---
 CompileFlags:
-  Add: [-xc, -Wall, -Werror, -pedantic, -std=c11, -Ideps/sokol]
+  Add:
+    - -xc
+    - -Wall
+    - -Werror
+    - -pedantic
+    - -std=c11
+    - -Ideps/sokol
+    - -Ideps/cimgui
