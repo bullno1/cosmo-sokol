@@ -1,14 +1,22 @@
 #!/bin/sh -e
 
-cosmocc \
-	-o main \
-	-I deps/sokol \
+FLAGS="-I deps/sokol \
 	-I deps/cimgui \
 	-I shims/linux \
 	-mcosmo \
 	-Wall \
 	-Werror \
-	-Wno-error=array-parameter \
-	shims/linux/gl.c \
-	shims/linux/x11.c \
-	main.c
+	-Wno-error=array-parameter"
+
+mkdir -p .build
+
+cosmoc++ ${FLAGS} -c deps/cimgui/cimgui.cpp -o .build/cimgui.o
+cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui.cpp -o .build/imgui.o
+cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_demo.cpp -o .build/imgui_demo.o
+cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_draw.cpp -o .build/imgui_draw.o
+cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_tables.cpp -o .build/imgui_tables.o
+cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_widgets.cpp -o .build/imgui_widgets.o
+cosmocc ${FLAGS} -c shims/linux/gl.c -o .build/gl.o
+cosmocc ${FLAGS} -c shims/linux/x11.c -o .build/x11.o
+cosmocc ${FLAGS} -c main.c -o .build/main.o
+cosmoc++ ${FLAGS} -o main .build/*.o
