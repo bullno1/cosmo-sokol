@@ -1,5 +1,12 @@
 #!/bin/sh -e
 
+if ! command -v cosmocc
+then
+	echo "You need to add cosmopolitan toolchain to your path:"
+	echo "export PATH=\$PATH:<path-to-cosmopolitan>/bin"
+	exit 1
+fi
+
 FLAGS="-I deps/sokol \
 	-I deps/cimgui \
 	-I shims/linux \
@@ -9,6 +16,8 @@ FLAGS="-I deps/sokol \
 	-Wno-error=array-parameter"
 
 mkdir -p .build
+
+# TODO: Makefile?
 
 cosmoc++ ${FLAGS} -c deps/cimgui/cimgui.cpp -o .build/cimgui.o
 cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui.cpp -o .build/imgui.o
