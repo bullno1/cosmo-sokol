@@ -4,15 +4,3 @@
 [submodule "deps/cimgui"]
 	path = deps/cimgui
 	url = https://github.com/cimgui/cimgui.git
-[submodule "deps/dxsdk"]
-	path = deps/dxsdk
-	url = https://github.com/apitrace/dxsdk.git
-[submodule "deps/windows-sdk-headers"]
-	path = deps/windows-sdk-headers
-	url = https://github.com/hughbe/windows-sdk-headers.git
-[submodule "deps/winsdk"]
-	path = deps/winsdk
-	url = https://github.com/tpn/winsdk-10.git
-[submodule "deps/WindowsHModular"]
-	path = deps/WindowsHModular
-	url = https://github.com/Leandros/WindowsHModular.git
