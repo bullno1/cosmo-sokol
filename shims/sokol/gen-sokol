@@ -1,0 +1,178 @@
+#!/usr/bin/env python
+
+import textwrap
+import re
+
+SOKOL_FUNCTIONS = [
+    "bool sapp_isvalid()",
+    "int sapp_width()",
+    "float sapp_widthf()",
+    "int sapp_height()",
+    "float sapp_heightf()",
+    "int sapp_color_format()",
+    "int sapp_depth_format()",
+    "int sapp_sample_count()",
+    "bool sapp_high_dpi()",
+    "float sapp_dpi_scale()",
+    "void sapp_show_keyboard(bool show)",
+    "bool sapp_keyboard_shown()",
+    "bool sapp_is_fullscreen()",
+    "void sapp_toggle_fullscreen()",
+    "void sapp_show_mouse(bool show)",
+    "bool sapp_mouse_shown()",
+    "void sapp_lock_mouse(bool lock)",
+    "bool sapp_mouse_locked()",
+    "void sapp_set_mouse_cursor(sapp_mouse_cursor cursor)",
+    "sapp_mouse_cursor sapp_get_mouse_cursor()",
+    "void* sapp_userdata()",
+    "sapp_desc sapp_query_desc()",
+    "void sapp_request_quit()",
+    "void sapp_cancel_quit()",
+    "void sapp_quit()",
+    "void sapp_consume_event()",
+    "uint64_t sapp_frame_count()",
+    "double sapp_frame_duration()",
+    "void sapp_set_clipboard_string(const char* str)",
+    "const char* sapp_get_clipboard_string()",
+    "void sapp_set_window_title(const char* str)",
+    "void sapp_set_icon(const sapp_icon_desc* icon_desc)",
+    "int sapp_get_num_dropped_files()",
+    "const char* sapp_get_dropped_file_path(int index)",
+    "void sapp_run(const sapp_desc* desc)",
+    "const void* sapp_egl_get_display()",
+    "const void* sapp_egl_get_context()",
+    "void sapp_html5_ask_leave_site(bool ask)",
+    "uint32_t sapp_html5_get_dropped_file_size(int index)",
+    "void sapp_html5_fetch_dropped_file(const sapp_html5_fetch_request* request)",
+    "const void* sapp_metal_get_device()",
+    "const void* sapp_metal_get_current_drawable()",
+    "const void* sapp_metal_get_depth_stencil_texture()",
+    "const void* sapp_metal_get_msaa_color_texture()",
+    "const void* sapp_macos_get_window()",
+    "const void* sapp_ios_get_window()",
+    "const void* sapp_d3d11_get_device()",
+    "const void* sapp_d3d11_get_device_context()",
+    "const void* sapp_d3d11_get_swap_chain()",
+    "const void* sapp_d3d11_get_render_view()",
+    "const void* sapp_d3d11_get_resolve_view()",
+    "const void* sapp_d3d11_get_depth_stencil_view()",
+    "const void* sapp_win32_get_hwnd()",
+    "const void* sapp_wgpu_get_device()",
+    "const void* sapp_wgpu_get_render_view()",
+    "const void* sapp_wgpu_get_resolve_view()",
+    "const void* sapp_wgpu_get_depth_stencil_view()",
+    "uint32_t sapp_gl_get_framebuffer()",
+    "int sapp_gl_get_major_version()",
+    "int sapp_gl_get_minor_version()",
+    "const void* sapp_android_get_native_activity()",
+]
+
+PLATFORMS = ["Linux"]
+
+def main():
+    for platform in PLATFORMS:
+        with open(f"sokol_{platform}.h", "w") as f:
+            f.write("#pragma once\n")
+
+            for function in SOKOL_FUNCTIONS:
+                sig = parse_c_signature(function)
+                name = sig['name']
+                f.write(f"#define {name} {name.replace('sapp', 'sapp_' + platform)}\n")
+
+    with open(f"sokol_cosmo.c", "w") as f:
+        f.write(textwrap.dedent("""
+        #include <sokol_app.h>
+        #include <cosmo.h>
+        #pragma GCC diagnostic ignored "-Wreturn-type"
+
+        """))
+
+        for function in SOKOL_FUNCTIONS:
+            sig = parse_c_signature(function)
+            return_type = sig['return_type']
+            name = sig['name']
+            args = sig['args']
+
+
+            for platform in PLATFORMS:
+                platform_name = name.replace('sapp', 'sapp_' + platform)
+                f.write(f"extern {return_type} {platform_name}({arg_list(args)});\n")
+
+            f.write(f"{return_type} {name}({arg_list(args)}) {{\n")
+            for platform in PLATFORMS:
+                platform_name = name.replace('sapp', 'sapp_' + platform)
+                f.write(f"    if (Is{platform}()) {{\n")
+                if return_type == "void":
+                    f.write(f"        {platform_name}({forward_list(args)});\n")
+                    f.write( "        return;\n")
+                else:
+                    f.write(f"        return {platform_name}({forward_list(args)});\n")
+                f.write(f"    }}\n")
+            f.write("}\n\n")
+
+def parse_c_signature(signature):
+    # Define a regex pattern to match a C function signature
+    pattern = r"(?P<return_type>[a-zA-Z_][a-zA-Z0-9_\s\*]+\s+\**)(?P<name>[a-zA-Z_][a-zA-Z0-9_]*)\s*\((?P<args>.*)\)"
+
+    # Match the pattern with the provided signature
+    match = re.match(pattern, signature.strip())
+    assert match, "Could not parse signature"
+
+    # Extract components from named groups
+    return_type = match.group("return_type").strip()
+    name = match.group("name").strip()
+    args = match.group("args").strip()
+
+    # Process arguments into a list, handling empty argument lists
+    args_list = [arg.strip() for arg in args.split(",")] if args else []
+
+    # Further split each argument into type and name
+    processed_args = []
+    for arg in args_list:
+        if arg:  # Only process non-empty arguments
+            # Separate type and name for each argument
+            parts = arg.rsplit(" ", 1)  # Split from the right to handle cases like "int *ptr"
+            if len(parts) == 2:
+                arg_type, arg_name = parts[0].strip(), parts[1].strip()
+            else:
+                # Handle cases with unnamed parameters or pointer-only types
+                arg_type, arg_name = parts[0].strip(), None
+
+            # Pointer arg
+            if arg_name.startswith('*'):
+                new_arg_name = arg_name.lstrip('*')
+                num_stars = len(arg_name) - len(new_arg_name)
+                arg_name = new_arg_name
+                arg_type = arg_type + '*' * num_stars
+
+            processed_args.append({"type": arg_type, "name": arg_name})
+
+    return {
+        "return_type": return_type,
+        "name": name,
+        "args": processed_args
+    }
+
+
+def arg_list(params):
+    if len(params) > 0:
+        return ', '.join([
+            f"{param['type']} {param['name']}"
+            for param in params
+        ])
+    else:
+        return 'void'
+
+
+def forward_list(params):
+    if len(params) > 0:
+        return ', '.join([
+            f"{param['name']}"
+            for param in params
+        ])
+    else:
+        return ''
+
+
+if __name__ == "__main__":
+    main()

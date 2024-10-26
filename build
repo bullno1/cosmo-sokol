@@ -7,18 +7,34 @@ then
 	exit 1
 fi
 
+COSMO_HOME=$(dirname $(dirname $(which cosmocc)))
+
 FLAGS="-I deps/sokol \
 	-I deps/cimgui \
 	-I shims/linux \
+	-I shims/sokol \
 	-mcosmo \
 	-Wall \
 	-Werror \
 	-Wno-error=array-parameter"
 
+WIN32_FLAGS="-I deps/sokol \
+	-I deps/cimgui \
+	-I shims/win32 \
+	-I shims/sokol \
+	-I ${COSMO_HOME}/include/libc/nt \
+	-mcosmo \
+	-Wall \
+	-Werror"
+
 mkdir -p .build
 
 # TODO: Makefile?
 
+#cosmocc ${WIN32_FLAGS} -c sokol_app_win32.c -o .build/sokol_app_win32.o
+cosmocc ${FLAGS} -c sokol_app_linux.c -o .build/sokol_app_linux.o
+cosmocc ${FLAGS} -c sokol_shared.c -o .build/sokol_shared.o
+cosmocc ${FLAGS} -c shims/sokol/sokol_cosmo.c -o .build/sokol_cosmo.o
 cosmoc++ ${FLAGS} -c deps/cimgui/cimgui.cpp -o .build/cimgui.o
 cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui.cpp -o .build/imgui.o
 cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_demo.cpp -o .build/imgui_demo.o
