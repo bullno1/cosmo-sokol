@@ -28,6 +28,7 @@ WIN32_FLAGS="-I deps/sokol \
 	-Werror"
 
 mkdir -p .build
+mkdir -p bin
 
 # TODO: Makefile?
 
@@ -44,4 +45,4 @@ cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_widgets.cpp -o .build/imgui_widgets
 cosmocc ${FLAGS} -c shims/linux/gl.c -o .build/gl.o
 cosmocc ${FLAGS} -c shims/linux/x11.c -o .build/x11.o
 cosmocc ${FLAGS} -c main.c -o .build/main.o
-cosmoc++ ${FLAGS} -o main .build/*.o
+cosmoc++ ${FLAGS} -o bin/cosmo-sokol .build/*.o

@@ -365,7 +365,7 @@ typedef struct _ICONINFO {
 #define MAKEINTRESOURCEW(i) ((LPWSTR)((ULONG_PTR)((WORD)(i))))
 #define MAKEINTRESOURCE  MAKEINTRESOURCEW
 
-#define CreateWindowExW CreateWindow
+#define CreateWindowExW CreateWindowEx
 #define DefWindowProcW DefWindowProc
 #define DispatchMessageW DispatchMessage
 #define CommandLineToArgvW CommandLineToArgv
@@ -377,6 +377,8 @@ typedef struct _ICONINFO {
 #define RegisterClassW RegisterClass
 #define SetWindowTextW SetWindowText
 #define UnregisterClassW UnregisterClass
+#define CreateWindowW(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam)\
+	CreateWindowExW(0L, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam)
 
 #include <stdio.h>
 #include <errno.h>
