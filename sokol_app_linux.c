@@ -6,3 +6,4 @@
 #define SOKOL_NO_ENTRY
 #define sokol_main sokol_Linux_main
 #include "sokol_app.h"
+#include "sokol_gfx.h"

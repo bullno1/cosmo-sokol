@@ -103,6 +103,8 @@ extern void cosmo_sapp_start_linux(const sapp_desc* desc);
 extern void cosmo_sapp_start_win32(const sapp_desc* desc);
 
 int main(int argc, char* argv[]) {
+    ShowCrashReports();
+
     sapp_desc app = {
         .init_cb = init,
         .frame_cb = frame,
@@ -117,5 +119,5 @@ int main(int argc, char* argv[]) {
         .logger.func = slog_func,
     };
 
-	sapp_run(&app);
+    sapp_run(&app);
 }
