@@ -5,6 +5,7 @@
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
 #pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
 #pragma GCC diagnostic ignored "-Wint-conversion"
+#pragma GCC diagnostic ignored "-Warray-parameter"
 
 #undef LARGE_INTEGER
 #undef PLARGE_INTEGER
@@ -75,7 +76,6 @@ typedef struct tagMSG {
 
 #define _In_
 #define _In_opt_
-#define GLAPIENTRY
 
 typedef struct tagPIXELFORMATDESCRIPTOR {
   WORD  nSize;
@@ -109,7 +109,6 @@ typedef struct tagPIXELFORMATDESCRIPTOR {
 #define PFD_SUPPORT_OPENGL 0x00000020
 #define PFD_DOUBLEBUFFER 0x00000001
 #define PFD_TYPE_RGBA 0
-
 
 #define MONITOR_DEFAULTTONULL 0x00000000
 #define MONITOR_DEFAULTTONEAREST 0x00000002
@@ -358,10 +357,9 @@ typedef struct _ICONINFO {
   HBITMAP hbmColor;
 } ICONINFO;
 
+#define APIENTRY WINAPI
+
 #define SOKOL_GLCORE
 #define _WIN32
 #define SOKOL_IMPL
 #include "sokol_app.h"
-#include "sokol_gfx.h"
-#include "sokol_log.h"
-#include "sokol_glue.h"
