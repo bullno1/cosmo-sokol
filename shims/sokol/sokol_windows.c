@@ -1,4 +1,5 @@
 #include <windowsesque.h>
+
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wpointer-sign"
 #pragma GCC diagnostic ignored "-Wincompatible-pointer-types"
@@ -394,11 +395,10 @@ static errno_t freopen_s(
 	return errno;
 }
 
-#include <sokol_Windows.h>
-
-#define SOKOL_GLCORE
 #define _WIN32
+#define SOKOL_GLCORE
 #define SOKOL_NO_ENTRY
 #define SOKOL_IMPL
+#include "sokol_windows.h"
 #include "sokol_app.h"
 #include "sokol_gfx.h"

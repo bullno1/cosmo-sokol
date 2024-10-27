@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import textwrap
+import os
 import re
 
 SOKOL_FUNCTIONS = [
@@ -204,8 +205,10 @@ SOKOL_FUNCTIONS = [
 PLATFORMS = ["Linux", "Windows"]
 
 def main():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
     for platform in PLATFORMS:
-        with open(f"sokol_{platform}.h", "w") as f:
+        with open(f"sokol_{platform.lower()}.h", "w") as f:
             f.write("#pragma once\n")
 
             for function in SOKOL_FUNCTIONS:
@@ -247,7 +250,7 @@ def main():
 
 
 def make_platform_name(name, platform):
-    return name.replace('sapp', 'sapp_' + platform, 1).replace('sg', 'sg_' + platform, 1)
+    return f'{platform.lower()}_{name}'
 
 
 def parse_c_signature(signature):

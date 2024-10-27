@@ -11,33 +11,23 @@ COSMO_HOME=$(dirname $(dirname $(which cosmocc)))
 
 FLAGS="-I deps/sokol \
 	-I deps/cimgui \
-	-I shims/linux \
-	-I shims/sokol \
 	-mcosmo \
-	-mdbg \
-	-fsanitize=undefined \
+	-mtiny \
 	-Wall \
 	-Werror"
 
-WIN32_FLAGS="-I deps/sokol \
-	-I deps/cimgui \
-	-I shims/win32 \
-	-I shims/sokol \
-	-I ${COSMO_HOME}/include/libc/nt \
-	-mcosmo \
-	-mdbg \
-	-fsanitize=undefined \
-	-Wall \
-	-Werror"
+LINUX_FLAGS="${FLAGS} -Ishims/linux"
+
+WIN32_FLAGS="${FLAGS} -Ishims/win32 -I ${COSMO_HOME}/include/libc/nt"
 
 mkdir -p .build
 mkdir -p bin
 
 # TODO: Makefile?
 
-cosmocc ${WIN32_FLAGS} -c sokol_app_win32.c -o .build/sokol_app_win32.o
-cosmocc ${FLAGS} -c sokol_app_linux.c -o .build/sokol_app_linux.o
-cosmocc ${FLAGS} -c sokol_shared.c -o .build/sokol_shared.o
+cosmocc ${WIN32_FLAGS} -c shims/sokol/sokol_windows.c -o .build/sokol_windows.o
+cosmocc ${LINUX_FLAGS} -c shims/sokol/sokol_linux.c -o .build/sokol_linux.o
+cosmocc ${FLAGS} -c shims/sokol/sokol_shared.c -o .build/sokol_shared.o
 cosmocc ${FLAGS} -c shims/sokol/sokol_cosmo.c -o .build/sokol_cosmo.o
 cosmoc++ ${FLAGS} -c deps/cimgui/cimgui.cpp -o .build/cimgui.o
 cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui.cpp -o .build/imgui.o
@@ -45,7 +35,7 @@ cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_demo.cpp -o .build/imgui_demo.o
 cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_draw.cpp -o .build/imgui_draw.o
 cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_tables.cpp -o .build/imgui_tables.o
 cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_widgets.cpp -o .build/imgui_widgets.o
-cosmocc ${FLAGS} -c shims/linux/gl.c -o .build/gl.o
-cosmocc ${FLAGS} -c shims/linux/x11.c -o .build/x11.o
+cosmocc ${LINUX_FLAGS} -c shims/linux/gl.c -o .build/gl.o
+cosmocc ${LINUX_FLAGS} -c shims/linux/x11.c -o .build/x11.o
 cosmocc ${FLAGS} -c main.c -o .build/main.o
 cosmoc++ ${FLAGS} -o bin/cosmo-sokol .build/*.o

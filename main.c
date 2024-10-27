@@ -99,9 +99,6 @@ void input(const sapp_event* event) {
     simgui_handle_event(event);
 }
 
-extern void cosmo_sapp_start_linux(const sapp_desc* desc);
-extern void cosmo_sapp_start_win32(const sapp_desc* desc);
-
 int main(int argc, char* argv[]) {
     ShowCrashReports();
 
