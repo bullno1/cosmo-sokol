@@ -23,19 +23,24 @@ WIN32_FLAGS="${FLAGS} -Ishims/win32 -I ${COSMO_HOME}/include/libc/nt"
 mkdir -p .build
 mkdir -p bin
 
-# TODO: Makefile?
+COMPILE=scripts/compile
 
-cosmocc ${WIN32_FLAGS} -c shims/sokol/sokol_windows.c -o .build/sokol_windows.o
-cosmocc ${LINUX_FLAGS} -c shims/sokol/sokol_linux.c -o .build/sokol_linux.o
-cosmocc ${FLAGS} -c shims/sokol/sokol_shared.c -o .build/sokol_shared.o
-cosmocc ${FLAGS} -c shims/sokol/sokol_cosmo.c -o .build/sokol_cosmo.o
-cosmoc++ ${FLAGS} -c deps/cimgui/cimgui.cpp -o .build/cimgui.o
-cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui.cpp -o .build/imgui.o
-cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_demo.cpp -o .build/imgui_demo.o
-cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_draw.cpp -o .build/imgui_draw.o
-cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_tables.cpp -o .build/imgui_tables.o
-cosmoc++ ${FLAGS} -c deps/cimgui/imgui/imgui_widgets.cpp -o .build/imgui_widgets.o
-cosmocc ${LINUX_FLAGS} -c shims/linux/gl.c -o .build/gl.o
-cosmocc ${LINUX_FLAGS} -c shims/linux/x11.c -o .build/x11.o
-cosmocc ${FLAGS} -c main.c -o .build/main.o
-cosmoc++ ${FLAGS} -o bin/cosmo-sokol .build/*.o
+$COMPILE shims/sokol/sokol_windows.c ${WIN32_FLAGS}
+$COMPILE shims/sokol/sokol_linux.c ${LINUX_FLAGS}
+$COMPILE shims/sokol/sokol_shared.c ${FLAGS}
+$COMPILE shims/sokol/sokol_cosmo.c ${FLAGS}
+
+$COMPILE deps/cimgui/cimgui.cpp ${FLAGS}
+$COMPILE deps/cimgui/imgui/imgui.cpp ${FLAGS}
+$COMPILE deps/cimgui/imgui/imgui_demo.cpp ${FLAGS}
+$COMPILE deps/cimgui/imgui/imgui_draw.cpp ${FLAGS}
+$COMPILE deps/cimgui/imgui/imgui_tables.cpp ${FLAGS}
+$COMPILE deps/cimgui/imgui/imgui_widgets.cpp ${FLAGS}
+
+$COMPILE shims/linux/gl.c ${LINUX_FLAGS}
+$COMPILE shims/linux/x11.c ${LINUX_FLAGS}
+
+$COMPILE main.c ${FLAGS}
+
+objects=$(find .build -name '*.o' -not -path '*.aarch64/*')
+cosmoc++ ${FLAGS} -o bin/cosmo-sokol $objects

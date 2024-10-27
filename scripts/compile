@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+source="$1"
+shift 1
+flags="$@"
+
+object=".build/$source.o"
+
+if [ ! -f "$object" ] || [ "$source" -nt "$object" ]
+then
+	mkdir -p $(dirname "$object")
+	case "$source" in
+		*.c)
+			exec cosmocc $flags -c "$source" -o "$object"
+			;;
+		*.cpp)
+			exec cosmoc++ $flags -c "$source" -o "$object"
+			;;
+		*)
+			echo "Cannot compile $source"
+			exit 1
+			;;
+	esac
+fi
