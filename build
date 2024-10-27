@@ -22,25 +22,30 @@ WIN32_FLAGS="${FLAGS} -Ishims/win32 -I ${COSMO_HOME}/include/libc/nt"
 
 mkdir -p .build
 mkdir -p bin
+rm -f .build/commands
 
-COMPILE=scripts/compile
+compile() {
+	echo scripts/compile "$@" >> .build/commands
+}
 
-$COMPILE shims/sokol/sokol_windows.c ${WIN32_FLAGS}
-$COMPILE shims/sokol/sokol_linux.c ${LINUX_FLAGS}
-$COMPILE shims/sokol/sokol_shared.c ${FLAGS}
-$COMPILE shims/sokol/sokol_cosmo.c ${FLAGS}
+compile shims/sokol/sokol_windows.c ${WIN32_FLAGS}
+compile shims/sokol/sokol_linux.c ${LINUX_FLAGS}
+compile shims/sokol/sokol_shared.c ${FLAGS}
+compile shims/sokol/sokol_cosmo.c ${FLAGS}
 
-$COMPILE deps/cimgui/cimgui.cpp ${FLAGS}
-$COMPILE deps/cimgui/imgui/imgui.cpp ${FLAGS}
-$COMPILE deps/cimgui/imgui/imgui_demo.cpp ${FLAGS}
-$COMPILE deps/cimgui/imgui/imgui_draw.cpp ${FLAGS}
-$COMPILE deps/cimgui/imgui/imgui_tables.cpp ${FLAGS}
-$COMPILE deps/cimgui/imgui/imgui_widgets.cpp ${FLAGS}
+compile deps/cimgui/cimgui.cpp ${FLAGS}
+compile deps/cimgui/imgui/imgui.cpp ${FLAGS}
+compile deps/cimgui/imgui/imgui_demo.cpp ${FLAGS}
+compile deps/cimgui/imgui/imgui_draw.cpp ${FLAGS}
+compile deps/cimgui/imgui/imgui_tables.cpp ${FLAGS}
+compile deps/cimgui/imgui/imgui_widgets.cpp ${FLAGS}
 
-$COMPILE shims/linux/gl.c ${LINUX_FLAGS}
-$COMPILE shims/linux/x11.c ${LINUX_FLAGS}
+compile shims/linux/gl.c ${LINUX_FLAGS}
+compile shims/linux/x11.c ${LINUX_FLAGS}
 
-$COMPILE main.c ${FLAGS}
+compile main.c ${FLAGS}
+
+cat .build/commands | parallel --bar --max-procs $(nproc)
 
 objects=$(find .build -name '*.o' -not -path '*.aarch64/*')
 cosmoc++ ${FLAGS} -o bin/cosmo-sokol $objects
