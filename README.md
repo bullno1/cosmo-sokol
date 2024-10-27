@@ -7,7 +7,7 @@ Sample sokol+dearimgui application compiled with cosmopolitan toolchain.
 Until the changes are merged upstream, the following cosmopolitan fork is required: https://github.com/bullno1/cosmopolitan/tree/new-nt-functions.
 With cosmocc in your PATH, run `./build`.
 
-Then run `./main`.
+Then run `bin/cosmo-sokol`.
 
 Note: On Windows, if you are using a NVIDIA graphic card, you may have to disable "Threaded optimization".
 
