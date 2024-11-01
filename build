@@ -45,7 +45,14 @@ compile shims/linux/x11.c ${LINUX_FLAGS}
 
 compile main.c ${FLAGS}
 
-cat .build/commands | parallel --bar --max-procs $(nproc)
+if [ -t 1 ]
+then
+	PARALLEL_FLAGS="--bar"
+else
+	PARALLEL_FLAGS="--progress"
+fi
+
+cat .build/commands | parallel $PARALLEL_FLAGS --max-procs $(nproc)
 
 objects=$(find .build -name '*.o' -not -path '*.aarch64/*')
 cosmoc++ ${FLAGS} -o bin/cosmo-sokol $objects
