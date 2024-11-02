@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 
-bool nvapi_disable_threaded_optimization(const char* profile_name);
+bool
+nvapi_disable_threaded_optimization(const char* profile_name);
 
 #endif

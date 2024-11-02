@@ -44,6 +44,7 @@ compile shims/linux/gl.c ${LINUX_FLAGS}
 compile shims/linux/x11.c ${LINUX_FLAGS}
 
 compile nvapi/nvapi.c ${WIN32_FLAGS}
+compile win32_tweaks.c ${WIN32_FLAGS}
 
 compile main.c ${FLAGS} -Invapi
 
