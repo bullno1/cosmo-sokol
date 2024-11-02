@@ -6,7 +6,8 @@ Sample sokol+dearimgui application compiled with [cosmopolitan toolchain](https:
 
 ## Build instruction
 
-Until the changes are merged upstream, the following cosmopolitan fork is required: https://github.com/bullno1/cosmopolitan/tree/new-nt-functions.
+Download cosmocc at: https://github.com/jart/cosmopolitan/releases.
+At least v3.9.5 is required.
 With cosmocc in your PATH, run `./build`.
 
 Then run `bin/cosmo-sokol`.
