@@ -32,8 +32,8 @@ typedef WINAPI int(*NvAPI_DRS_CreateProfile_t)(NvDRSSessionHandle, NVDRS_PROFILE
 typedef WINAPI int(*NvAPI_DRS_CreateApplication_t)(NvDRSSessionHandle, NvDRSProfileHandle, NVDRS_APPLICATION *);
 typedef WINAPI int(*NvAPI_DRS_SaveSettings_t)(NvDRSSessionHandle);
 typedef WINAPI int(*NvAPI_DRS_SetSetting_t)(NvDRSSessionHandle, NvDRSProfileHandle, NVDRS_SETTING *);
+typedef WINAPI int(*NvAPI_DRS_FindApplicationByName_t)(NvDRSSessionHandle hSession, NvAPI_UnicodeString appName, NvDRSProfileHandle* phProfile, NVDRS_APPLICATION* pApplication);
 typedef WINAPI int(*NvAPI_DRS_FindProfileByName_t)(NvDRSSessionHandle, NvAPI_UnicodeString, NvDRSProfileHandle *);
-typedef WINAPI int(*NvAPI_DRS_GetApplicationInfo_t)(NvDRSSessionHandle, NvDRSProfileHandle, NvAPI_UnicodeString, NVDRS_APPLICATION *);
 typedef WINAPI int(*NvAPI_DRS_DeleteProfile_t)(NvDRSSessionHandle, NvDRSProfileHandle);
 typedef WINAPI void*(*NvAPI_QueryInterface_t)(unsigned int);
 
@@ -44,8 +44,6 @@ nvapi_disable_threaded_optimization(const char* profile_name) {
 	HMODULE nvapi = LoadLibraryA("nvapi64.dll");
 	if (nvapi == NULL) { return false; }
 
-	size_t profile_name_utf16_len;
-	char16_t* profile_name_utf16 = utf8to16(profile_name, -1, &profile_name_utf16_len);
 	char16_t module_path[PATH_MAX];
 	bool success = false;
 	bool initialized = false;
@@ -62,9 +60,8 @@ nvapi_disable_threaded_optimization(const char* profile_name) {
 	NvAPI_DRS_CreateApplication_t NvAPI_DRS_CreateApplication = (NvAPI_DRS_CreateApplication_t)NvAPI_QueryInterface(0x4347A9DE);
 	NvAPI_DRS_SaveSettings_t NvAPI_DRS_SaveSettings = (NvAPI_DRS_SaveSettings_t)NvAPI_QueryInterface(0xFCBC7E14);
 	NvAPI_DRS_SetSetting_t NvAPI_DRS_SetSetting = (NvAPI_DRS_SetSetting_t)NvAPI_QueryInterface(0x577DD202);
+	NvAPI_DRS_FindApplicationByName_t NvAPI_DRS_FindApplicationByName = (NvAPI_DRS_FindApplicationByName_t)NvAPI_QueryInterface(0xEEE566B2);
 	NvAPI_DRS_FindProfileByName_t NvAPI_DRS_FindProfileByName = (NvAPI_DRS_FindProfileByName_t)NvAPI_QueryInterface(0x7E4A9A0B);
-	NvAPI_DRS_GetApplicationInfo_t NvAPI_DRS_GetApplicationInfo = (NvAPI_DRS_GetApplicationInfo_t)NvAPI_QueryInterface(0xED1F8C69);
-	/*NvAPI_DRS_DeleteProfile_t NvAPI_DRS_DeleteProfile = (NvAPI_DRS_DeleteProfile_t)NvAPI_QueryInterface(0x17093206);*/
 
 	NVAPI_CHECK(NvAPI_Initialize());
 	initialized = true;
@@ -72,21 +69,26 @@ nvapi_disable_threaded_optimization(const char* profile_name) {
 	NVAPI_CHECK(NvAPI_DRS_CreateSession(&session_handle));
 	NVAPI_CHECK(NvAPI_DRS_LoadSettings(session_handle));
 
-	NvDRSProfileHandle profile_handle;
-	if (NvAPI_DRS_FindProfileByName(session_handle, profile_name_utf16, &profile_handle) != 0) {
+	// Try to find existing profile or create if one does not exist
+	uint32_t module_path_len = GetModuleFileName(NULL, module_path, PATH_MAX);
+	NvDRSProfileHandle profile_handle = NULL;
+	NVDRS_APPLICATION app = { .version = NVDRS_APPLICATION_VER };
+	if (NvAPI_DRS_FindApplicationByName(session_handle, module_path, &profile_handle, &app) != 0) {
 		NVDRS_PROFILE profile_info = {
 			.version = NVDRS_PROFILE_VER,
 			.isPredefined = 0,
 		};
+
+		size_t profile_name_utf16_len;
+		char16_t* profile_name_utf16 = utf8to16(profile_name, -1, &profile_name_utf16_len);
 		memcpy(profile_info.profileName, profile_name_utf16, sizeof(char16_t) * profile_name_utf16_len);
+		free(profile_name_utf16);
 
-		NVAPI_CHECK(NvAPI_DRS_CreateProfile(session_handle, &profile_info, &profile_handle));
-	}
+		if (NvAPI_DRS_FindProfileByName(session_handle, profile_info.profileName, &profile_handle) != 0) {
+			NVAPI_CHECK(NvAPI_DRS_CreateProfile(session_handle, &profile_info, &profile_handle));
+		}
 
-	uint32_t module_path_len = GetModuleFileName(NULL, module_path, PATH_MAX);
-	NVDRS_APPLICATION_V4 app;
-	if (NvAPI_DRS_GetApplicationInfo(session_handle, profile_handle, module_path, &app) != 0) {
-		app = (NVDRS_APPLICATION_V4) {
+		app = (NVDRS_APPLICATION){
 			.version = NVDRS_APPLICATION_VER,
 			.isPredefined = 0,
 		};
@@ -94,6 +96,7 @@ nvapi_disable_threaded_optimization(const char* profile_name) {
 		NVAPI_CHECK(NvAPI_DRS_CreateApplication(session_handle, profile_handle, &app));
 	}
 
+	// Apply setting
 	NVDRS_SETTING setting = {
 		.version = NVDRS_SETTING_VER,
 		.settingId = OGL_THREAD_CONTROL_ID,
@@ -110,7 +113,6 @@ nvapi_disable_threaded_optimization(const char* profile_name) {
 end:
 	if (session_handle) { NvAPI_DRS_DestroySession(session_handle); }
 	if (initialized) { NvAPI_Unload(); }
-	if (profile_name_utf16) { free(profile_name_utf16); }
 	if (nvapi) { FreeLibrary(nvapi); }
 
 	return success;
