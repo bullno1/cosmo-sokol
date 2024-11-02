@@ -1,3 +1,6 @@
+#ifndef __linux__
+#define __linux__
+#endif
 #define SOKOL_NO_ENTRY
 #define SOKOL_GLCORE
 #include "sokol_app.h"

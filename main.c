@@ -15,6 +15,7 @@
 #define SOKOL_IMGUI_IMPL
 #include "util/sokol_imgui.h"
 #include <cosmo.h>
+#include <nvapi.h>
 
 typedef struct {
     uint64_t last_time;
@@ -101,6 +102,7 @@ void input(const sapp_event* event) {
 
 int main(int argc, char* argv[]) {
     ShowCrashReports();
+    nvapi_disable_threaded_optimization("cosmo-sokol");
 
     sapp_desc app = {
         .init_cb = init,

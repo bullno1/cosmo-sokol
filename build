@@ -43,7 +43,9 @@ compile deps/cimgui/imgui/imgui_widgets.cpp ${FLAGS}
 compile shims/linux/gl.c ${LINUX_FLAGS}
 compile shims/linux/x11.c ${LINUX_FLAGS}
 
-compile main.c ${FLAGS}
+compile nvapi/nvapi.c ${WIN32_FLAGS}
+
+compile main.c ${FLAGS} -Invapi
 
 if [ -t 1 ]
 then
