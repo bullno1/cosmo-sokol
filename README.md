@@ -32,7 +32,7 @@ All undefined references have to be manually added to the list of generated func
 Take note that a nullary function such as [XInitThreads](https://www.x.org/archive/X11R7.5/doc/man/man3/XInitThreads.3.html) have to be declared as: `Status XInitThreads()`.
 
 For OpenGL, the exhaustive list of functions can be found at: https://github.com/KhronosGroup/OpenGL-Registry/blob/main/xml/gl.xml.
-[gen-gl](shims/linux/gen-gl) simply requires a minimum version number to generate [gl.c](shims/linux/gl.x).
+[gen-gl](shims/linux/gen-gl) simply requires a minimum version number to generate [gl.c](shims/linux/gl.c).
 
 ### Windows
 
@@ -45,7 +45,7 @@ As of this writing, the required changes are merged and `sokol_app` + `sokol_gfx
 ### Multi-platform runtime
 
 sokol makes use of platform ifdef to selectively compile platform-dependent code.
-In cosmopolitan, we want to compile all platform-dependent code path and select the right implementation at runtime.
+In cosmopolitan, we want to compile all platform-dependent code paths and select the right implementation at runtime instead.
 
 In order to do that with the same library, we can use the following preprocessor trick:
 
