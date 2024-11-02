@@ -35,4 +35,4 @@ jobs:
         with:
           draft: true
           files: |
-            cosmo-sokol.zip
+            bin/cosmo-sokol.zip
