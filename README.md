@@ -12,8 +12,6 @@ With cosmocc in your PATH, run `./build`.
 
 Then run `bin/cosmo-sokol`.
 
-Note: On Windows, if you are using a NVIDIA graphic card, you may have to disable "Threaded optimization".
-
 Checkout the [github workflow](.github/workflows/build.yml) for all the required dependencies.
 
 ## How it works
