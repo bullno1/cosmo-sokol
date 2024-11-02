@@ -1,6 +1,8 @@
 # cosmo-sokol
 
-Sample sokol+dearimgui application compiled with cosmopolitan toolchain.
+![Build status](https://github.com/bullno1/cosmo-sokol/actions/workflows/build.yml/badge.svg)
+
+Sample sokol+dearimgui application compiled with [cosmopolitan toolchain](https://github.com/jart/cosmopolitan/).
 
 ## Build instruction
 
