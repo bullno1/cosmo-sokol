@@ -42,6 +42,10 @@ Simply list the name, dll and arity in that file.
 This requires making upstream changes to cosmopolitan.
 As of this writing, the required changes are merged and `sokol_app` + `sokol_gfx` can run on Windows.
 
+`windows.h` (and its transitive headers) includes a lot of struct definitions and macros.
+Unfortunately, including the official `windows.h` directly or its MinGW counterpart often results in a lot of duplicated and conflicting definitions when compiling using cosmocc.
+Therefore, all relevant definitions are instead replicated inside [`sokol_windows.c`](shims/sokol/sokol_windows.c).
+
 ### Multi-platform runtime
 
 sokol makes use of platform ifdef to selectively compile platform-dependent code.
