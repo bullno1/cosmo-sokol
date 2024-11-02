@@ -5,6 +5,8 @@ concurrency:
   cancel-in-progress: true
 on:
   - push
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
