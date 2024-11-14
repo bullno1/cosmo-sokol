@@ -1,9 +1,10 @@
 #include <GL/gl.h>
 #include <stddef.h>
+#include <threads.h>
 #include <dlfcn.h>
 #pragma GCC diagnostic ignored "-Warray-parameter"
 
-static void* libgl = NULL;
+static once_flag libgl_init = {0};
 
 static void (*proc_glAccum)(GLenum op, GLfloat value) = NULL;
 static void (*proc_glActiveTexture)(GLenum texture) = NULL;
@@ -777,7 +778,7 @@ static void (*proc_glWindowPos3s)(GLshort x, GLshort y, GLshort z) = NULL;
 static void (*proc_glWindowPos3sv)(const GLshort * v) = NULL;
 
 static void load_gl_shims(void) {
-    libgl = cosmo_dlopen("libgl.so", RTLD_NOW | RTLD_GLOBAL);
+    void* libgl = cosmo_dlopen("libgl.so", RTLD_NOW | RTLD_GLOBAL);
     proc_glAccum = cosmo_dltramp(cosmo_dlsym(libgl, "glAccum"));
     proc_glActiveTexture = cosmo_dltramp(cosmo_dlsym(libgl, "glActiveTexture"));
     proc_glAlphaFunc = cosmo_dltramp(cosmo_dlsym(libgl, "glAlphaFunc"));
@@ -1551,4621 +1552,4621 @@ static void load_gl_shims(void) {
 }
 
 void glAccum(GLenum op, GLfloat value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glAccum(op, value);
 }
 
 void glActiveTexture(GLenum texture) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glActiveTexture(texture);
 }
 
 void glAlphaFunc(GLenum func, GLfloat ref) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glAlphaFunc(func, ref);
 }
 
 GLboolean glAreTexturesResident(GLsizei n, const GLuint * textures, GLboolean * residences) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glAreTexturesResident(n, textures, residences);
 }
 
 void glArrayElement(GLint i) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glArrayElement(i);
 }
 
 void glAttachShader(GLuint program, GLuint shader) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glAttachShader(program, shader);
 }
 
 void glBegin(GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBegin(mode);
 }
 
 void glBeginConditionalRender(GLuint id, GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBeginConditionalRender(id, mode);
 }
 
 void glBeginQuery(GLenum target, GLuint id) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBeginQuery(target, id);
 }
 
 void glBeginQueryIndexed(GLenum target, GLuint index, GLuint id) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBeginQueryIndexed(target, index, id);
 }
 
 void glBeginTransformFeedback(GLenum primitiveMode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBeginTransformFeedback(primitiveMode);
 }
 
 void glBindAttribLocation(GLuint program, GLuint index, const GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindAttribLocation(program, index, name);
 }
 
 void glBindBuffer(GLenum target, GLuint buffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindBuffer(target, buffer);
 }
 
 void glBindBufferBase(GLenum target, GLuint index, GLuint buffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindBufferBase(target, index, buffer);
 }
 
 void glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindBufferRange(target, index, buffer, offset, size);
 }
 
 void glBindFragDataLocation(GLuint program, GLuint color, const GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindFragDataLocation(program, color, name);
 }
 
 void glBindFragDataLocationIndexed(GLuint program, GLuint colorNumber, GLuint index, const GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindFragDataLocationIndexed(program, colorNumber, index, name);
 }
 
 void glBindFramebuffer(GLenum target, GLuint framebuffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindFramebuffer(target, framebuffer);
 }
 
 void glBindRenderbuffer(GLenum target, GLuint renderbuffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindRenderbuffer(target, renderbuffer);
 }
 
 void glBindSampler(GLuint unit, GLuint sampler) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindSampler(unit, sampler);
 }
 
 void glBindTexture(GLenum target, GLuint texture) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindTexture(target, texture);
 }
 
 void glBindTransformFeedback(GLenum target, GLuint id) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindTransformFeedback(target, id);
 }
 
 void glBindVertexArray(GLuint array) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBindVertexArray(array);
 }
 
 void glBitmap(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte * bitmap) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap);
 }
 
 void glBlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBlendColor(red, green, blue, alpha);
 }
 
 void glBlendEquation(GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBlendEquation(mode);
 }
 
 void glBlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBlendEquationSeparate(modeRGB, modeAlpha);
 }
 
 void glBlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBlendEquationSeparatei(buf, modeRGB, modeAlpha);
 }
 
 void glBlendEquationi(GLuint buf, GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBlendEquationi(buf, mode);
 }
 
 void glBlendFunc(GLenum sfactor, GLenum dfactor) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBlendFunc(sfactor, dfactor);
 }
 
 void glBlendFuncSeparate(GLenum sfactorRGB, GLenum dfactorRGB, GLenum sfactorAlpha, GLenum dfactorAlpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBlendFuncSeparate(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
 }
 
 void glBlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBlendFuncSeparatei(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
 }
 
 void glBlendFunci(GLuint buf, GLenum src, GLenum dst) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBlendFunci(buf, src, dst);
 }
 
 void glBlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
 }
 
 void glBufferData(GLenum target, GLsizeiptr size, const void * data, GLenum usage) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBufferData(target, size, data, usage);
 }
 
 void glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glBufferSubData(target, offset, size, data);
 }
 
 void glCallList(GLuint list) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCallList(list);
 }
 
 void glCallLists(GLsizei n, GLenum type, const void * lists) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCallLists(n, type, lists);
 }
 
 GLenum glCheckFramebufferStatus(GLenum target) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glCheckFramebufferStatus(target);
 }
 
 void glClampColor(GLenum target, GLenum clamp) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClampColor(target, clamp);
 }
 
 void glClear(GLbitfield mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClear(mask);
 }
 
 void glClearAccum(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClearAccum(red, green, blue, alpha);
 }
 
 void glClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClearBufferfi(buffer, drawbuffer, depth, stencil);
 }
 
 void glClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClearBufferfv(buffer, drawbuffer, value);
 }
 
 void glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClearBufferiv(buffer, drawbuffer, value);
 }
 
 void glClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClearBufferuiv(buffer, drawbuffer, value);
 }
 
 void glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClearColor(red, green, blue, alpha);
 }
 
 void glClearDepth(GLdouble depth) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClearDepth(depth);
 }
 
 void glClearIndex(GLfloat c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClearIndex(c);
 }
 
 void glClearStencil(GLint s) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClearStencil(s);
 }
 
 void glClientActiveTexture(GLenum texture) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClientActiveTexture(texture);
 }
 
 GLenum glClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glClientWaitSync(sync, flags, timeout);
 }
 
 void glClipPlane(GLenum plane, const GLdouble * equation) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glClipPlane(plane, equation);
 }
 
 void glColor3b(GLbyte red, GLbyte green, GLbyte blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3b(red, green, blue);
 }
 
 void glColor3bv(const GLbyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3bv(v);
 }
 
 void glColor3d(GLdouble red, GLdouble green, GLdouble blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3d(red, green, blue);
 }
 
 void glColor3dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3dv(v);
 }
 
 void glColor3f(GLfloat red, GLfloat green, GLfloat blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3f(red, green, blue);
 }
 
 void glColor3fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3fv(v);
 }
 
 void glColor3i(GLint red, GLint green, GLint blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3i(red, green, blue);
 }
 
 void glColor3iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3iv(v);
 }
 
 void glColor3s(GLshort red, GLshort green, GLshort blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3s(red, green, blue);
 }
 
 void glColor3sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3sv(v);
 }
 
 void glColor3ub(GLubyte red, GLubyte green, GLubyte blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3ub(red, green, blue);
 }
 
 void glColor3ubv(const GLubyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3ubv(v);
 }
 
 void glColor3ui(GLuint red, GLuint green, GLuint blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3ui(red, green, blue);
 }
 
 void glColor3uiv(const GLuint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3uiv(v);
 }
 
 void glColor3us(GLushort red, GLushort green, GLushort blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3us(red, green, blue);
 }
 
 void glColor3usv(const GLushort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor3usv(v);
 }
 
 void glColor4b(GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4b(red, green, blue, alpha);
 }
 
 void glColor4bv(const GLbyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4bv(v);
 }
 
 void glColor4d(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4d(red, green, blue, alpha);
 }
 
 void glColor4dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4dv(v);
 }
 
 void glColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4f(red, green, blue, alpha);
 }
 
 void glColor4fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4fv(v);
 }
 
 void glColor4i(GLint red, GLint green, GLint blue, GLint alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4i(red, green, blue, alpha);
 }
 
 void glColor4iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4iv(v);
 }
 
 void glColor4s(GLshort red, GLshort green, GLshort blue, GLshort alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4s(red, green, blue, alpha);
 }
 
 void glColor4sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4sv(v);
 }
 
 void glColor4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4ub(red, green, blue, alpha);
 }
 
 void glColor4ubv(const GLubyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4ubv(v);
 }
 
 void glColor4ui(GLuint red, GLuint green, GLuint blue, GLuint alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4ui(red, green, blue, alpha);
 }
 
 void glColor4uiv(const GLuint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4uiv(v);
 }
 
 void glColor4us(GLushort red, GLushort green, GLushort blue, GLushort alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4us(red, green, blue, alpha);
 }
 
 void glColor4usv(const GLushort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColor4usv(v);
 }
 
 void glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColorMask(red, green, blue, alpha);
 }
 
 void glColorMaski(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColorMaski(index, r, g, b, a);
 }
 
 void glColorMaterial(GLenum face, GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColorMaterial(face, mode);
 }
 
 void glColorP3ui(GLenum type, GLuint color) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColorP3ui(type, color);
 }
 
 void glColorP3uiv(GLenum type, const GLuint * color) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColorP3uiv(type, color);
 }
 
 void glColorP4ui(GLenum type, GLuint color) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColorP4ui(type, color);
 }
 
 void glColorP4uiv(GLenum type, const GLuint * color) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColorP4uiv(type, color);
 }
 
 void glColorPointer(GLint size, GLenum type, GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glColorPointer(size, type, stride, pointer);
 }
 
 void glCompileShader(GLuint shader) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCompileShader(shader);
 }
 
 void glCompressedTexImage1D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLint border, GLsizei imageSize, const void * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data);
 }
 
 void glCompressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const void * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
 }
 
 void glCompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const void * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data);
 }
 
 void glCompressedTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLsizei imageSize, const void * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data);
 }
 
 void glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
 }
 
 void glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
 }
 
 void glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCopyBufferSubData(readTarget, writeTarget, readOffset, writeOffset, size);
 }
 
 void glCopyPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum type) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCopyPixels(x, y, width, height, type);
 }
 
 void glCopyTexImage1D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLint border) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCopyTexImage1D(target, level, internalformat, x, y, width, border);
 }
 
 void glCopyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCopyTexImage2D(target, level, internalformat, x, y, width, height, border);
 }
 
 void glCopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCopyTexSubImage1D(target, level, xoffset, x, y, width);
 }
 
 void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
 }
 
 void glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);
 }
 
 GLuint glCreateProgram(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glCreateProgram();
 }
 
 GLuint glCreateShader(GLenum type) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glCreateShader(type);
 }
 
 void glCullFace(GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glCullFace(mode);
 }
 
 void glDeleteBuffers(GLsizei n, const GLuint * buffers) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteBuffers(n, buffers);
 }
 
 void glDeleteFramebuffers(GLsizei n, const GLuint * framebuffers) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteFramebuffers(n, framebuffers);
 }
 
 void glDeleteLists(GLuint list, GLsizei range) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteLists(list, range);
 }
 
 void glDeleteProgram(GLuint program) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteProgram(program);
 }
 
 void glDeleteQueries(GLsizei n, const GLuint * ids) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteQueries(n, ids);
 }
 
 void glDeleteRenderbuffers(GLsizei n, const GLuint * renderbuffers) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteRenderbuffers(n, renderbuffers);
 }
 
 void glDeleteSamplers(GLsizei count, const GLuint * samplers) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteSamplers(count, samplers);
 }
 
 void glDeleteShader(GLuint shader) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteShader(shader);
 }
 
 void glDeleteSync(GLsync sync) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteSync(sync);
 }
 
 void glDeleteTextures(GLsizei n, const GLuint * textures) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteTextures(n, textures);
 }
 
 void glDeleteTransformFeedbacks(GLsizei n, const GLuint * ids) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteTransformFeedbacks(n, ids);
 }
 
 void glDeleteVertexArrays(GLsizei n, const GLuint * arrays) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDeleteVertexArrays(n, arrays);
 }
 
 void glDepthFunc(GLenum func) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDepthFunc(func);
 }
 
 void glDepthMask(GLboolean flag) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDepthMask(flag);
 }
 
 void glDepthRange(GLdouble n, GLdouble f) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDepthRange(n, f);
 }
 
 void glDetachShader(GLuint program, GLuint shader) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDetachShader(program, shader);
 }
 
 void glDisable(GLenum cap) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDisable(cap);
 }
 
 void glDisableClientState(GLenum array) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDisableClientState(array);
 }
 
 void glDisableVertexAttribArray(GLuint index) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDisableVertexAttribArray(index);
 }
 
 void glDisablei(GLenum target, GLuint index) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDisablei(target, index);
 }
 
 void glDrawArrays(GLenum mode, GLint first, GLsizei count) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawArrays(mode, first, count);
 }
 
 void glDrawArraysIndirect(GLenum mode, const void * indirect) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawArraysIndirect(mode, indirect);
 }
 
 void glDrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instancecount) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawArraysInstanced(mode, first, count, instancecount);
 }
 
 void glDrawBuffer(GLenum buf) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawBuffer(buf);
 }
 
 void glDrawBuffers(GLsizei n, const GLenum * bufs) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawBuffers(n, bufs);
 }
 
 void glDrawElements(GLenum mode, GLsizei count, GLenum type, const void * indices) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawElements(mode, count, type, indices);
 }
 
 void glDrawElementsBaseVertex(GLenum mode, GLsizei count, GLenum type, const void * indices, GLint basevertex) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawElementsBaseVertex(mode, count, type, indices, basevertex);
 }
 
 void glDrawElementsIndirect(GLenum mode, GLenum type, const void * indirect) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawElementsIndirect(mode, type, indirect);
 }
 
 void glDrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawElementsInstanced(mode, count, type, indices, instancecount);
 }
 
 void glDrawElementsInstancedBaseVertex(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLint basevertex) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawElementsInstancedBaseVertex(mode, count, type, indices, instancecount, basevertex);
 }
 
 void glDrawPixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const void * pixels) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawPixels(width, height, format, type, pixels);
 }
 
 void glDrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const void * indices) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawRangeElements(mode, start, end, count, type, indices);
 }
 
 void glDrawRangeElementsBaseVertex(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const void * indices, GLint basevertex) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawRangeElementsBaseVertex(mode, start, end, count, type, indices, basevertex);
 }
 
 void glDrawTransformFeedback(GLenum mode, GLuint id) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawTransformFeedback(mode, id);
 }
 
 void glDrawTransformFeedbackStream(GLenum mode, GLuint id, GLuint stream) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glDrawTransformFeedbackStream(mode, id, stream);
 }
 
 void glEdgeFlag(GLboolean flag) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEdgeFlag(flag);
 }
 
 void glEdgeFlagPointer(GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEdgeFlagPointer(stride, pointer);
 }
 
 void glEdgeFlagv(const GLboolean * flag) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEdgeFlagv(flag);
 }
 
 void glEnable(GLenum cap) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEnable(cap);
 }
 
 void glEnableClientState(GLenum array) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEnableClientState(array);
 }
 
 void glEnableVertexAttribArray(GLuint index) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEnableVertexAttribArray(index);
 }
 
 void glEnablei(GLenum target, GLuint index) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEnablei(target, index);
 }
 
 void glEnd(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEnd();
 }
 
 void glEndConditionalRender(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEndConditionalRender();
 }
 
 void glEndList(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEndList();
 }
 
 void glEndQuery(GLenum target) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEndQuery(target);
 }
 
 void glEndQueryIndexed(GLenum target, GLuint index) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEndQueryIndexed(target, index);
 }
 
 void glEndTransformFeedback(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEndTransformFeedback();
 }
 
 void glEvalCoord1d(GLdouble u) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalCoord1d(u);
 }
 
 void glEvalCoord1dv(const GLdouble * u) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalCoord1dv(u);
 }
 
 void glEvalCoord1f(GLfloat u) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalCoord1f(u);
 }
 
 void glEvalCoord1fv(const GLfloat * u) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalCoord1fv(u);
 }
 
 void glEvalCoord2d(GLdouble u, GLdouble v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalCoord2d(u, v);
 }
 
 void glEvalCoord2dv(const GLdouble * u) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalCoord2dv(u);
 }
 
 void glEvalCoord2f(GLfloat u, GLfloat v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalCoord2f(u, v);
 }
 
 void glEvalCoord2fv(const GLfloat * u) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalCoord2fv(u);
 }
 
 void glEvalMesh1(GLenum mode, GLint i1, GLint i2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalMesh1(mode, i1, i2);
 }
 
 void glEvalMesh2(GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalMesh2(mode, i1, i2, j1, j2);
 }
 
 void glEvalPoint1(GLint i) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalPoint1(i);
 }
 
 void glEvalPoint2(GLint i, GLint j) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glEvalPoint2(i, j);
 }
 
 void glFeedbackBuffer(GLsizei size, GLenum type, GLfloat * buffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFeedbackBuffer(size, type, buffer);
 }
 
 GLsync glFenceSync(GLenum condition, GLbitfield flags) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glFenceSync(condition, flags);
 }
 
 void glFinish(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFinish();
 }
 
 void glFlush(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFlush();
 }
 
 void glFlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFlushMappedBufferRange(target, offset, length);
 }
 
 void glFogCoordPointer(GLenum type, GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFogCoordPointer(type, stride, pointer);
 }
 
 void glFogCoordd(GLdouble coord) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFogCoordd(coord);
 }
 
 void glFogCoorddv(const GLdouble * coord) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFogCoorddv(coord);
 }
 
 void glFogCoordf(GLfloat coord) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFogCoordf(coord);
 }
 
 void glFogCoordfv(const GLfloat * coord) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFogCoordfv(coord);
 }
 
 void glFogf(GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFogf(pname, param);
 }
 
 void glFogfv(GLenum pname, const GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFogfv(pname, params);
 }
 
 void glFogi(GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFogi(pname, param);
 }
 
 void glFogiv(GLenum pname, const GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFogiv(pname, params);
 }
 
 void glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
 }
 
 void glFramebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFramebufferTexture(target, attachment, texture, level);
 }
 
 void glFramebufferTexture1D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFramebufferTexture1D(target, attachment, textarget, texture, level);
 }
 
 void glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFramebufferTexture2D(target, attachment, textarget, texture, level);
 }
 
 void glFramebufferTexture3D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFramebufferTexture3D(target, attachment, textarget, texture, level, zoffset);
 }
 
 void glFramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFramebufferTextureLayer(target, attachment, texture, level, layer);
 }
 
 void glFrontFace(GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFrontFace(mode);
 }
 
 void glFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glFrustum(left, right, bottom, top, zNear, zFar);
 }
 
 void glGenBuffers(GLsizei n, GLuint * buffers) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGenBuffers(n, buffers);
 }
 
 void glGenFramebuffers(GLsizei n, GLuint * framebuffers) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGenFramebuffers(n, framebuffers);
 }
 
 GLuint glGenLists(GLsizei range) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGenLists(range);
 }
 
 void glGenQueries(GLsizei n, GLuint * ids) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGenQueries(n, ids);
 }
 
 void glGenRenderbuffers(GLsizei n, GLuint * renderbuffers) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGenRenderbuffers(n, renderbuffers);
 }
 
 void glGenSamplers(GLsizei count, GLuint * samplers) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGenSamplers(count, samplers);
 }
 
 void glGenTextures(GLsizei n, GLuint * textures) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGenTextures(n, textures);
 }
 
 void glGenTransformFeedbacks(GLsizei n, GLuint * ids) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGenTransformFeedbacks(n, ids);
 }
 
 void glGenVertexArrays(GLsizei n, GLuint * arrays) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGenVertexArrays(n, arrays);
 }
 
 void glGenerateMipmap(GLenum target) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGenerateMipmap(target);
 }
 
 void glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetActiveAttrib(program, index, bufSize, length, size, type, name);
 }
 
 void glGetActiveSubroutineName(GLuint program, GLenum shadertype, GLuint index, GLsizei bufSize, GLsizei * length, GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetActiveSubroutineName(program, shadertype, index, bufSize, length, name);
 }
 
 void glGetActiveSubroutineUniformName(GLuint program, GLenum shadertype, GLuint index, GLsizei bufSize, GLsizei * length, GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetActiveSubroutineUniformName(program, shadertype, index, bufSize, length, name);
 }
 
 void glGetActiveSubroutineUniformiv(GLuint program, GLenum shadertype, GLuint index, GLenum pname, GLint * values) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetActiveSubroutineUniformiv(program, shadertype, index, pname, values);
 }
 
 void glGetActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetActiveUniform(program, index, bufSize, length, size, type, name);
 }
 
 void glGetActiveUniformBlockName(GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei * length, GLchar * uniformBlockName) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetActiveUniformBlockName(program, uniformBlockIndex, bufSize, length, uniformBlockName);
 }
 
 void glGetActiveUniformBlockiv(GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetActiveUniformBlockiv(program, uniformBlockIndex, pname, params);
 }
 
 void glGetActiveUniformName(GLuint program, GLuint uniformIndex, GLsizei bufSize, GLsizei * length, GLchar * uniformName) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetActiveUniformName(program, uniformIndex, bufSize, length, uniformName);
 }
 
 void glGetActiveUniformsiv(GLuint program, GLsizei uniformCount, const GLuint * uniformIndices, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetActiveUniformsiv(program, uniformCount, uniformIndices, pname, params);
 }
 
 void glGetAttachedShaders(GLuint program, GLsizei maxCount, GLsizei * count, GLuint * shaders) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetAttachedShaders(program, maxCount, count, shaders);
 }
 
 GLint glGetAttribLocation(GLuint program, const GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGetAttribLocation(program, name);
 }
 
 void glGetBooleani_v(GLenum target, GLuint index, GLboolean * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetBooleani_v(target, index, data);
 }
 
 void glGetBooleanv(GLenum pname, GLboolean * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetBooleanv(pname, data);
 }
 
 void glGetBufferParameteri64v(GLenum target, GLenum pname, GLint64 * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetBufferParameteri64v(target, pname, params);
 }
 
 void glGetBufferParameteriv(GLenum target, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetBufferParameteriv(target, pname, params);
 }
 
 void glGetBufferPointerv(GLenum target, GLenum pname, void ** params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetBufferPointerv(target, pname, params);
 }
 
 void glGetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, void * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetBufferSubData(target, offset, size, data);
 }
 
 void glGetClipPlane(GLenum plane, GLdouble * equation) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetClipPlane(plane, equation);
 }
 
 void glGetCompressedTexImage(GLenum target, GLint level, void * img) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetCompressedTexImage(target, level, img);
 }
 
 void glGetDoublev(GLenum pname, GLdouble * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetDoublev(pname, data);
 }
 
 GLenum glGetError(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGetError();
 }
 
 void glGetFloatv(GLenum pname, GLfloat * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetFloatv(pname, data);
 }
 
 GLint glGetFragDataIndex(GLuint program, const GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGetFragDataIndex(program, name);
 }
 
 GLint glGetFragDataLocation(GLuint program, const GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGetFragDataLocation(program, name);
 }
 
 void glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attachment, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);
 }
 
 void glGetInteger64i_v(GLenum target, GLuint index, GLint64 * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetInteger64i_v(target, index, data);
 }
 
 void glGetInteger64v(GLenum pname, GLint64 * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetInteger64v(pname, data);
 }
 
 void glGetIntegeri_v(GLenum target, GLuint index, GLint * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetIntegeri_v(target, index, data);
 }
 
 void glGetIntegerv(GLenum pname, GLint * data) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetIntegerv(pname, data);
 }
 
 void glGetLightfv(GLenum light, GLenum pname, GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetLightfv(light, pname, params);
 }
 
 void glGetLightiv(GLenum light, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetLightiv(light, pname, params);
 }
 
 void glGetMapdv(GLenum target, GLenum query, GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetMapdv(target, query, v);
 }
 
 void glGetMapfv(GLenum target, GLenum query, GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetMapfv(target, query, v);
 }
 
 void glGetMapiv(GLenum target, GLenum query, GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetMapiv(target, query, v);
 }
 
 void glGetMaterialfv(GLenum face, GLenum pname, GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetMaterialfv(face, pname, params);
 }
 
 void glGetMaterialiv(GLenum face, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetMaterialiv(face, pname, params);
 }
 
 void glGetMultisamplefv(GLenum pname, GLuint index, GLfloat * val) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetMultisamplefv(pname, index, val);
 }
 
 void glGetPixelMapfv(GLenum map, GLfloat * values) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetPixelMapfv(map, values);
 }
 
 void glGetPixelMapuiv(GLenum map, GLuint * values) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetPixelMapuiv(map, values);
 }
 
 void glGetPixelMapusv(GLenum map, GLushort * values) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetPixelMapusv(map, values);
 }
 
 void glGetPointerv(GLenum pname, void ** params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetPointerv(pname, params);
 }
 
 void glGetPolygonStipple(GLubyte * mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetPolygonStipple(mask);
 }
 
 void glGetProgramInfoLog(GLuint program, GLsizei bufSize, GLsizei * length, GLchar * infoLog) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetProgramInfoLog(program, bufSize, length, infoLog);
 }
 
 void glGetProgramStageiv(GLuint program, GLenum shadertype, GLenum pname, GLint * values) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetProgramStageiv(program, shadertype, pname, values);
 }
 
 void glGetProgramiv(GLuint program, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetProgramiv(program, pname, params);
 }
 
 void glGetQueryIndexediv(GLenum target, GLuint index, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetQueryIndexediv(target, index, pname, params);
 }
 
 void glGetQueryObjecti64v(GLuint id, GLenum pname, GLint64 * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetQueryObjecti64v(id, pname, params);
 }
 
 void glGetQueryObjectiv(GLuint id, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetQueryObjectiv(id, pname, params);
 }
 
 void glGetQueryObjectui64v(GLuint id, GLenum pname, GLuint64 * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetQueryObjectui64v(id, pname, params);
 }
 
 void glGetQueryObjectuiv(GLuint id, GLenum pname, GLuint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetQueryObjectuiv(id, pname, params);
 }
 
 void glGetQueryiv(GLenum target, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetQueryiv(target, pname, params);
 }
 
 void glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetRenderbufferParameteriv(target, pname, params);
 }
 
 void glGetSamplerParameterIiv(GLuint sampler, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetSamplerParameterIiv(sampler, pname, params);
 }
 
 void glGetSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetSamplerParameterIuiv(sampler, pname, params);
 }
 
 void glGetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetSamplerParameterfv(sampler, pname, params);
 }
 
 void glGetSamplerParameteriv(GLuint sampler, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetSamplerParameteriv(sampler, pname, params);
 }
 
 void glGetShaderInfoLog(GLuint shader, GLsizei bufSize, GLsizei * length, GLchar * infoLog) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetShaderInfoLog(shader, bufSize, length, infoLog);
 }
 
 void glGetShaderSource(GLuint shader, GLsizei bufSize, GLsizei * length, GLchar * source) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetShaderSource(shader, bufSize, length, source);
 }
 
 void glGetShaderiv(GLuint shader, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetShaderiv(shader, pname, params);
 }
 
 const GLubyte * glGetString(GLenum name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGetString(name);
 }
 
 const GLubyte * glGetStringi(GLenum name, GLuint index) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGetStringi(name, index);
 }
 
 GLuint glGetSubroutineIndex(GLuint program, GLenum shadertype, const GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGetSubroutineIndex(program, shadertype, name);
 }
 
 GLint glGetSubroutineUniformLocation(GLuint program, GLenum shadertype, const GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGetSubroutineUniformLocation(program, shadertype, name);
 }
 
 void glGetSynciv(GLsync sync, GLenum pname, GLsizei count, GLsizei * length, GLint * values) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetSynciv(sync, pname, count, length, values);
 }
 
 void glGetTexEnvfv(GLenum target, GLenum pname, GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexEnvfv(target, pname, params);
 }
 
 void glGetTexEnviv(GLenum target, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexEnviv(target, pname, params);
 }
 
 void glGetTexGendv(GLenum coord, GLenum pname, GLdouble * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexGendv(coord, pname, params);
 }
 
 void glGetTexGenfv(GLenum coord, GLenum pname, GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexGenfv(coord, pname, params);
 }
 
 void glGetTexGeniv(GLenum coord, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexGeniv(coord, pname, params);
 }
 
 void glGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, void * pixels) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexImage(target, level, format, type, pixels);
 }
 
 void glGetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexLevelParameterfv(target, level, pname, params);
 }
 
 void glGetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexLevelParameteriv(target, level, pname, params);
 }
 
 void glGetTexParameterIiv(GLenum target, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexParameterIiv(target, pname, params);
 }
 
 void glGetTexParameterIuiv(GLenum target, GLenum pname, GLuint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexParameterIuiv(target, pname, params);
 }
 
 void glGetTexParameterfv(GLenum target, GLenum pname, GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexParameterfv(target, pname, params);
 }
 
 void glGetTexParameteriv(GLenum target, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTexParameteriv(target, pname, params);
 }
 
 void glGetTransformFeedbackVarying(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLsizei * size, GLenum * type, GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetTransformFeedbackVarying(program, index, bufSize, length, size, type, name);
 }
 
 GLuint glGetUniformBlockIndex(GLuint program, const GLchar * uniformBlockName) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGetUniformBlockIndex(program, uniformBlockName);
 }
 
 void glGetUniformIndices(GLuint program, GLsizei uniformCount, const GLchar *const* uniformNames, GLuint * uniformIndices) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetUniformIndices(program, uniformCount, uniformNames, uniformIndices);
 }
 
 GLint glGetUniformLocation(GLuint program, const GLchar * name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glGetUniformLocation(program, name);
 }
 
 void glGetUniformSubroutineuiv(GLenum shadertype, GLint location, GLuint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetUniformSubroutineuiv(shadertype, location, params);
 }
 
 void glGetUniformdv(GLuint program, GLint location, GLdouble * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetUniformdv(program, location, params);
 }
 
 void glGetUniformfv(GLuint program, GLint location, GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetUniformfv(program, location, params);
 }
 
 void glGetUniformiv(GLuint program, GLint location, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetUniformiv(program, location, params);
 }
 
 void glGetUniformuiv(GLuint program, GLint location, GLuint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetUniformuiv(program, location, params);
 }
 
 void glGetVertexAttribIiv(GLuint index, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetVertexAttribIiv(index, pname, params);
 }
 
 void glGetVertexAttribIuiv(GLuint index, GLenum pname, GLuint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetVertexAttribIuiv(index, pname, params);
 }
 
 void glGetVertexAttribPointerv(GLuint index, GLenum pname, void ** pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetVertexAttribPointerv(index, pname, pointer);
 }
 
 void glGetVertexAttribdv(GLuint index, GLenum pname, GLdouble * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetVertexAttribdv(index, pname, params);
 }
 
 void glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetVertexAttribfv(index, pname, params);
 }
 
 void glGetVertexAttribiv(GLuint index, GLenum pname, GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glGetVertexAttribiv(index, pname, params);
 }
 
 void glHint(GLenum target, GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glHint(target, mode);
 }
 
 void glIndexMask(GLuint mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexMask(mask);
 }
 
 void glIndexPointer(GLenum type, GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexPointer(type, stride, pointer);
 }
 
 void glIndexd(GLdouble c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexd(c);
 }
 
 void glIndexdv(const GLdouble * c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexdv(c);
 }
 
 void glIndexf(GLfloat c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexf(c);
 }
 
 void glIndexfv(const GLfloat * c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexfv(c);
 }
 
 void glIndexi(GLint c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexi(c);
 }
 
 void glIndexiv(const GLint * c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexiv(c);
 }
 
 void glIndexs(GLshort c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexs(c);
 }
 
 void glIndexsv(const GLshort * c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexsv(c);
 }
 
 void glIndexub(GLubyte c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexub(c);
 }
 
 void glIndexubv(const GLubyte * c) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glIndexubv(c);
 }
 
 void glInitNames(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glInitNames();
 }
 
 void glInterleavedArrays(GLenum format, GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glInterleavedArrays(format, stride, pointer);
 }
 
 GLboolean glIsBuffer(GLuint buffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsBuffer(buffer);
 }
 
 GLboolean glIsEnabled(GLenum cap) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsEnabled(cap);
 }
 
 GLboolean glIsEnabledi(GLenum target, GLuint index) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsEnabledi(target, index);
 }
 
 GLboolean glIsFramebuffer(GLuint framebuffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsFramebuffer(framebuffer);
 }
 
 GLboolean glIsList(GLuint list) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsList(list);
 }
 
 GLboolean glIsProgram(GLuint program) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsProgram(program);
 }
 
 GLboolean glIsQuery(GLuint id) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsQuery(id);
 }
 
 GLboolean glIsRenderbuffer(GLuint renderbuffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsRenderbuffer(renderbuffer);
 }
 
 GLboolean glIsSampler(GLuint sampler) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsSampler(sampler);
 }
 
 GLboolean glIsShader(GLuint shader) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsShader(shader);
 }
 
 GLboolean glIsSync(GLsync sync) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsSync(sync);
 }
 
 GLboolean glIsTexture(GLuint texture) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsTexture(texture);
 }
 
 GLboolean glIsTransformFeedback(GLuint id) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsTransformFeedback(id);
 }
 
 GLboolean glIsVertexArray(GLuint array) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glIsVertexArray(array);
 }
 
 void glLightModelf(GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLightModelf(pname, param);
 }
 
 void glLightModelfv(GLenum pname, const GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLightModelfv(pname, params);
 }
 
 void glLightModeli(GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLightModeli(pname, param);
 }
 
 void glLightModeliv(GLenum pname, const GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLightModeliv(pname, params);
 }
 
 void glLightf(GLenum light, GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLightf(light, pname, param);
 }
 
 void glLightfv(GLenum light, GLenum pname, const GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLightfv(light, pname, params);
 }
 
 void glLighti(GLenum light, GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLighti(light, pname, param);
 }
 
 void glLightiv(GLenum light, GLenum pname, const GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLightiv(light, pname, params);
 }
 
 void glLineStipple(GLint factor, GLushort pattern) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLineStipple(factor, pattern);
 }
 
 void glLineWidth(GLfloat width) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLineWidth(width);
 }
 
 void glLinkProgram(GLuint program) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLinkProgram(program);
 }
 
 void glListBase(GLuint base) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glListBase(base);
 }
 
 void glLoadIdentity(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLoadIdentity();
 }
 
 void glLoadMatrixd(const GLdouble * m) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLoadMatrixd(m);
 }
 
 void glLoadMatrixf(const GLfloat * m) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLoadMatrixf(m);
 }
 
 void glLoadName(GLuint name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLoadName(name);
 }
 
 void glLoadTransposeMatrixd(const GLdouble * m) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLoadTransposeMatrixd(m);
 }
 
 void glLoadTransposeMatrixf(const GLfloat * m) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLoadTransposeMatrixf(m);
 }
 
 void glLogicOp(GLenum opcode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glLogicOp(opcode);
 }
 
 void glMap1d(GLenum target, GLdouble u1, GLdouble u2, GLint stride, GLint order, const GLdouble * points) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMap1d(target, u1, u2, stride, order, points);
 }
 
 void glMap1f(GLenum target, GLfloat u1, GLfloat u2, GLint stride, GLint order, const GLfloat * points) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMap1f(target, u1, u2, stride, order, points);
 }
 
 void glMap2d(GLenum target, GLdouble u1, GLdouble u2, GLint ustride, GLint uorder, GLdouble v1, GLdouble v2, GLint vstride, GLint vorder, const GLdouble * points) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMap2d(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
 }
 
 void glMap2f(GLenum target, GLfloat u1, GLfloat u2, GLint ustride, GLint uorder, GLfloat v1, GLfloat v2, GLint vstride, GLint vorder, const GLfloat * points) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
 }
 
 void * glMapBuffer(GLenum target, GLenum access) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glMapBuffer(target, access);
 }
 
 void * glMapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glMapBufferRange(target, offset, length, access);
 }
 
 void glMapGrid1d(GLint un, GLdouble u1, GLdouble u2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMapGrid1d(un, u1, u2);
 }
 
 void glMapGrid1f(GLint un, GLfloat u1, GLfloat u2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMapGrid1f(un, u1, u2);
 }
 
 void glMapGrid2d(GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdouble v1, GLdouble v2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMapGrid2d(un, u1, u2, vn, v1, v2);
 }
 
 void glMapGrid2f(GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMapGrid2f(un, u1, u2, vn, v1, v2);
 }
 
 void glMaterialf(GLenum face, GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMaterialf(face, pname, param);
 }
 
 void glMaterialfv(GLenum face, GLenum pname, const GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMaterialfv(face, pname, params);
 }
 
 void glMateriali(GLenum face, GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMateriali(face, pname, param);
 }
 
 void glMaterialiv(GLenum face, GLenum pname, const GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMaterialiv(face, pname, params);
 }
 
 void glMatrixMode(GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMatrixMode(mode);
 }
 
 void glMinSampleShading(GLfloat value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMinSampleShading(value);
 }
 
 void glMultMatrixd(const GLdouble * m) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultMatrixd(m);
 }
 
 void glMultMatrixf(const GLfloat * m) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultMatrixf(m);
 }
 
 void glMultTransposeMatrixd(const GLdouble * m) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultTransposeMatrixd(m);
 }
 
 void glMultTransposeMatrixf(const GLfloat * m) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultTransposeMatrixf(m);
 }
 
 void glMultiDrawArrays(GLenum mode, const GLint * first, const GLsizei * count, GLsizei drawcount) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiDrawArrays(mode, first, count, drawcount);
 }
 
 void glMultiDrawElements(GLenum mode, const GLsizei * count, GLenum type, const void *const* indices, GLsizei drawcount) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiDrawElements(mode, count, type, indices, drawcount);
 }
 
 void glMultiDrawElementsBaseVertex(GLenum mode, const GLsizei * count, GLenum type, const void *const* indices, GLsizei drawcount, const GLint * basevertex) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiDrawElementsBaseVertex(mode, count, type, indices, drawcount, basevertex);
 }
 
 void glMultiTexCoord1d(GLenum target, GLdouble s) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord1d(target, s);
 }
 
 void glMultiTexCoord1dv(GLenum target, const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord1dv(target, v);
 }
 
 void glMultiTexCoord1f(GLenum target, GLfloat s) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord1f(target, s);
 }
 
 void glMultiTexCoord1fv(GLenum target, const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord1fv(target, v);
 }
 
 void glMultiTexCoord1i(GLenum target, GLint s) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord1i(target, s);
 }
 
 void glMultiTexCoord1iv(GLenum target, const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord1iv(target, v);
 }
 
 void glMultiTexCoord1s(GLenum target, GLshort s) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord1s(target, s);
 }
 
 void glMultiTexCoord1sv(GLenum target, const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord1sv(target, v);
 }
 
 void glMultiTexCoord2d(GLenum target, GLdouble s, GLdouble t) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord2d(target, s, t);
 }
 
 void glMultiTexCoord2dv(GLenum target, const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord2dv(target, v);
 }
 
 void glMultiTexCoord2f(GLenum target, GLfloat s, GLfloat t) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord2f(target, s, t);
 }
 
 void glMultiTexCoord2fv(GLenum target, const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord2fv(target, v);
 }
 
 void glMultiTexCoord2i(GLenum target, GLint s, GLint t) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord2i(target, s, t);
 }
 
 void glMultiTexCoord2iv(GLenum target, const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord2iv(target, v);
 }
 
 void glMultiTexCoord2s(GLenum target, GLshort s, GLshort t) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord2s(target, s, t);
 }
 
 void glMultiTexCoord2sv(GLenum target, const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord2sv(target, v);
 }
 
 void glMultiTexCoord3d(GLenum target, GLdouble s, GLdouble t, GLdouble r) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord3d(target, s, t, r);
 }
 
 void glMultiTexCoord3dv(GLenum target, const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord3dv(target, v);
 }
 
 void glMultiTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat r) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord3f(target, s, t, r);
 }
 
 void glMultiTexCoord3fv(GLenum target, const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord3fv(target, v);
 }
 
 void glMultiTexCoord3i(GLenum target, GLint s, GLint t, GLint r) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord3i(target, s, t, r);
 }
 
 void glMultiTexCoord3iv(GLenum target, const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord3iv(target, v);
 }
 
 void glMultiTexCoord3s(GLenum target, GLshort s, GLshort t, GLshort r) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord3s(target, s, t, r);
 }
 
 void glMultiTexCoord3sv(GLenum target, const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord3sv(target, v);
 }
 
 void glMultiTexCoord4d(GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord4d(target, s, t, r, q);
 }
 
 void glMultiTexCoord4dv(GLenum target, const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord4dv(target, v);
 }
 
 void glMultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord4f(target, s, t, r, q);
 }
 
 void glMultiTexCoord4fv(GLenum target, const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord4fv(target, v);
 }
 
 void glMultiTexCoord4i(GLenum target, GLint s, GLint t, GLint r, GLint q) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord4i(target, s, t, r, q);
 }
 
 void glMultiTexCoord4iv(GLenum target, const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord4iv(target, v);
 }
 
 void glMultiTexCoord4s(GLenum target, GLshort s, GLshort t, GLshort r, GLshort q) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord4s(target, s, t, r, q);
 }
 
 void glMultiTexCoord4sv(GLenum target, const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoord4sv(target, v);
 }
 
 void glMultiTexCoordP1ui(GLenum texture, GLenum type, GLuint coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoordP1ui(texture, type, coords);
 }
 
 void glMultiTexCoordP1uiv(GLenum texture, GLenum type, const GLuint * coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoordP1uiv(texture, type, coords);
 }
 
 void glMultiTexCoordP2ui(GLenum texture, GLenum type, GLuint coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoordP2ui(texture, type, coords);
 }
 
 void glMultiTexCoordP2uiv(GLenum texture, GLenum type, const GLuint * coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoordP2uiv(texture, type, coords);
 }
 
 void glMultiTexCoordP3ui(GLenum texture, GLenum type, GLuint coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoordP3ui(texture, type, coords);
 }
 
 void glMultiTexCoordP3uiv(GLenum texture, GLenum type, const GLuint * coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoordP3uiv(texture, type, coords);
 }
 
 void glMultiTexCoordP4ui(GLenum texture, GLenum type, GLuint coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoordP4ui(texture, type, coords);
 }
 
 void glMultiTexCoordP4uiv(GLenum texture, GLenum type, const GLuint * coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glMultiTexCoordP4uiv(texture, type, coords);
 }
 
 void glNewList(GLuint list, GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNewList(list, mode);
 }
 
 void glNormal3b(GLbyte nx, GLbyte ny, GLbyte nz) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormal3b(nx, ny, nz);
 }
 
 void glNormal3bv(const GLbyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormal3bv(v);
 }
 
 void glNormal3d(GLdouble nx, GLdouble ny, GLdouble nz) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormal3d(nx, ny, nz);
 }
 
 void glNormal3dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormal3dv(v);
 }
 
 void glNormal3f(GLfloat nx, GLfloat ny, GLfloat nz) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormal3f(nx, ny, nz);
 }
 
 void glNormal3fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormal3fv(v);
 }
 
 void glNormal3i(GLint nx, GLint ny, GLint nz) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormal3i(nx, ny, nz);
 }
 
 void glNormal3iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormal3iv(v);
 }
 
 void glNormal3s(GLshort nx, GLshort ny, GLshort nz) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormal3s(nx, ny, nz);
 }
 
 void glNormal3sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormal3sv(v);
 }
 
 void glNormalP3ui(GLenum type, GLuint coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormalP3ui(type, coords);
 }
 
 void glNormalP3uiv(GLenum type, const GLuint * coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormalP3uiv(type, coords);
 }
 
 void glNormalPointer(GLenum type, GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glNormalPointer(type, stride, pointer);
 }
 
 void glOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glOrtho(left, right, bottom, top, zNear, zFar);
 }
 
 void glPassThrough(GLfloat token) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPassThrough(token);
 }
 
 void glPatchParameterfv(GLenum pname, const GLfloat * values) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPatchParameterfv(pname, values);
 }
 
 void glPatchParameteri(GLenum pname, GLint value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPatchParameteri(pname, value);
 }
 
 void glPauseTransformFeedback(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPauseTransformFeedback();
 }
 
 void glPixelMapfv(GLenum map, GLsizei mapsize, const GLfloat * values) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPixelMapfv(map, mapsize, values);
 }
 
 void glPixelMapuiv(GLenum map, GLsizei mapsize, const GLuint * values) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPixelMapuiv(map, mapsize, values);
 }
 
 void glPixelMapusv(GLenum map, GLsizei mapsize, const GLushort * values) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPixelMapusv(map, mapsize, values);
 }
 
 void glPixelStoref(GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPixelStoref(pname, param);
 }
 
 void glPixelStorei(GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPixelStorei(pname, param);
 }
 
 void glPixelTransferf(GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPixelTransferf(pname, param);
 }
 
 void glPixelTransferi(GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPixelTransferi(pname, param);
 }
 
 void glPixelZoom(GLfloat xfactor, GLfloat yfactor) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPixelZoom(xfactor, yfactor);
 }
 
 void glPointParameterf(GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPointParameterf(pname, param);
 }
 
 void glPointParameterfv(GLenum pname, const GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPointParameterfv(pname, params);
 }
 
 void glPointParameteri(GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPointParameteri(pname, param);
 }
 
 void glPointParameteriv(GLenum pname, const GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPointParameteriv(pname, params);
 }
 
 void glPointSize(GLfloat size) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPointSize(size);
 }
 
 void glPolygonMode(GLenum face, GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPolygonMode(face, mode);
 }
 
 void glPolygonOffset(GLfloat factor, GLfloat units) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPolygonOffset(factor, units);
 }
 
 void glPolygonStipple(const GLubyte * mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPolygonStipple(mask);
 }
 
 void glPopAttrib(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPopAttrib();
 }
 
 void glPopClientAttrib(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPopClientAttrib();
 }
 
 void glPopMatrix(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPopMatrix();
 }
 
 void glPopName(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPopName();
 }
 
 void glPrimitiveRestartIndex(GLuint index) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPrimitiveRestartIndex(index);
 }
 
 void glPrioritizeTextures(GLsizei n, const GLuint * textures, const GLfloat * priorities) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPrioritizeTextures(n, textures, priorities);
 }
 
 void glProvokingVertex(GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glProvokingVertex(mode);
 }
 
 void glPushAttrib(GLbitfield mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPushAttrib(mask);
 }
 
 void glPushClientAttrib(GLbitfield mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPushClientAttrib(mask);
 }
 
 void glPushMatrix(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPushMatrix();
 }
 
 void glPushName(GLuint name) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glPushName(name);
 }
 
 void glQueryCounter(GLuint id, GLenum target) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glQueryCounter(id, target);
 }
 
 void glRasterPos2d(GLdouble x, GLdouble y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos2d(x, y);
 }
 
 void glRasterPos2dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos2dv(v);
 }
 
 void glRasterPos2f(GLfloat x, GLfloat y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos2f(x, y);
 }
 
 void glRasterPos2fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos2fv(v);
 }
 
 void glRasterPos2i(GLint x, GLint y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos2i(x, y);
 }
 
 void glRasterPos2iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos2iv(v);
 }
 
 void glRasterPos2s(GLshort x, GLshort y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos2s(x, y);
 }
 
 void glRasterPos2sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos2sv(v);
 }
 
 void glRasterPos3d(GLdouble x, GLdouble y, GLdouble z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos3d(x, y, z);
 }
 
 void glRasterPos3dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos3dv(v);
 }
 
 void glRasterPos3f(GLfloat x, GLfloat y, GLfloat z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos3f(x, y, z);
 }
 
 void glRasterPos3fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos3fv(v);
 }
 
 void glRasterPos3i(GLint x, GLint y, GLint z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos3i(x, y, z);
 }
 
 void glRasterPos3iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos3iv(v);
 }
 
 void glRasterPos3s(GLshort x, GLshort y, GLshort z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos3s(x, y, z);
 }
 
 void glRasterPos3sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos3sv(v);
 }
 
 void glRasterPos4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos4d(x, y, z, w);
 }
 
 void glRasterPos4dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos4dv(v);
 }
 
 void glRasterPos4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos4f(x, y, z, w);
 }
 
 void glRasterPos4fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos4fv(v);
 }
 
 void glRasterPos4i(GLint x, GLint y, GLint z, GLint w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos4i(x, y, z, w);
 }
 
 void glRasterPos4iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos4iv(v);
 }
 
 void glRasterPos4s(GLshort x, GLshort y, GLshort z, GLshort w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos4s(x, y, z, w);
 }
 
 void glRasterPos4sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRasterPos4sv(v);
 }
 
 void glReadBuffer(GLenum src) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glReadBuffer(src);
 }
 
 void glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void * pixels) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glReadPixels(x, y, width, height, format, type, pixels);
 }
 
 void glRectd(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRectd(x1, y1, x2, y2);
 }
 
 void glRectdv(const GLdouble * v1, const GLdouble * v2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRectdv(v1, v2);
 }
 
 void glRectf(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRectf(x1, y1, x2, y2);
 }
 
 void glRectfv(const GLfloat * v1, const GLfloat * v2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRectfv(v1, v2);
 }
 
 void glRecti(GLint x1, GLint y1, GLint x2, GLint y2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRecti(x1, y1, x2, y2);
 }
 
 void glRectiv(const GLint * v1, const GLint * v2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRectiv(v1, v2);
 }
 
 void glRects(GLshort x1, GLshort y1, GLshort x2, GLshort y2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRects(x1, y1, x2, y2);
 }
 
 void glRectsv(const GLshort * v1, const GLshort * v2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRectsv(v1, v2);
 }
 
 GLint glRenderMode(GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glRenderMode(mode);
 }
 
 void glRenderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, GLsizei height) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRenderbufferStorage(target, internalformat, width, height);
 }
 
 void glRenderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRenderbufferStorageMultisample(target, samples, internalformat, width, height);
 }
 
 void glResumeTransformFeedback(void) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glResumeTransformFeedback();
 }
 
 void glRotated(GLdouble angle, GLdouble x, GLdouble y, GLdouble z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRotated(angle, x, y, z);
 }
 
 void glRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glRotatef(angle, x, y, z);
 }
 
 void glSampleCoverage(GLfloat value, GLboolean invert) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSampleCoverage(value, invert);
 }
 
 void glSampleMaski(GLuint maskNumber, GLbitfield mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSampleMaski(maskNumber, mask);
 }
 
 void glSamplerParameterIiv(GLuint sampler, GLenum pname, const GLint * param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSamplerParameterIiv(sampler, pname, param);
 }
 
 void glSamplerParameterIuiv(GLuint sampler, GLenum pname, const GLuint * param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSamplerParameterIuiv(sampler, pname, param);
 }
 
 void glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSamplerParameterf(sampler, pname, param);
 }
 
 void glSamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat * param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSamplerParameterfv(sampler, pname, param);
 }
 
 void glSamplerParameteri(GLuint sampler, GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSamplerParameteri(sampler, pname, param);
 }
 
 void glSamplerParameteriv(GLuint sampler, GLenum pname, const GLint * param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSamplerParameteriv(sampler, pname, param);
 }
 
 void glScaled(GLdouble x, GLdouble y, GLdouble z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glScaled(x, y, z);
 }
 
 void glScalef(GLfloat x, GLfloat y, GLfloat z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glScalef(x, y, z);
 }
 
 void glScissor(GLint x, GLint y, GLsizei width, GLsizei height) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glScissor(x, y, width, height);
 }
 
 void glSecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3b(red, green, blue);
 }
 
 void glSecondaryColor3bv(const GLbyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3bv(v);
 }
 
 void glSecondaryColor3d(GLdouble red, GLdouble green, GLdouble blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3d(red, green, blue);
 }
 
 void glSecondaryColor3dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3dv(v);
 }
 
 void glSecondaryColor3f(GLfloat red, GLfloat green, GLfloat blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3f(red, green, blue);
 }
 
 void glSecondaryColor3fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3fv(v);
 }
 
 void glSecondaryColor3i(GLint red, GLint green, GLint blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3i(red, green, blue);
 }
 
 void glSecondaryColor3iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3iv(v);
 }
 
 void glSecondaryColor3s(GLshort red, GLshort green, GLshort blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3s(red, green, blue);
 }
 
 void glSecondaryColor3sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3sv(v);
 }
 
 void glSecondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3ub(red, green, blue);
 }
 
 void glSecondaryColor3ubv(const GLubyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3ubv(v);
 }
 
 void glSecondaryColor3ui(GLuint red, GLuint green, GLuint blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3ui(red, green, blue);
 }
 
 void glSecondaryColor3uiv(const GLuint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3uiv(v);
 }
 
 void glSecondaryColor3us(GLushort red, GLushort green, GLushort blue) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3us(red, green, blue);
 }
 
 void glSecondaryColor3usv(const GLushort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColor3usv(v);
 }
 
 void glSecondaryColorP3ui(GLenum type, GLuint color) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColorP3ui(type, color);
 }
 
 void glSecondaryColorP3uiv(GLenum type, const GLuint * color) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColorP3uiv(type, color);
 }
 
 void glSecondaryColorPointer(GLint size, GLenum type, GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSecondaryColorPointer(size, type, stride, pointer);
 }
 
 void glSelectBuffer(GLsizei size, GLuint * buffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glSelectBuffer(size, buffer);
 }
 
 void glShadeModel(GLenum mode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glShadeModel(mode);
 }
 
 void glShaderSource(GLuint shader, GLsizei count, const GLchar *const* string, const GLint * length) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glShaderSource(shader, count, string, length);
 }
 
 void glStencilFunc(GLenum func, GLint ref, GLuint mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glStencilFunc(func, ref, mask);
 }
 
 void glStencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glStencilFuncSeparate(face, func, ref, mask);
 }
 
 void glStencilMask(GLuint mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glStencilMask(mask);
 }
 
 void glStencilMaskSeparate(GLenum face, GLuint mask) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glStencilMaskSeparate(face, mask);
 }
 
 void glStencilOp(GLenum fail, GLenum zfail, GLenum zpass) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glStencilOp(fail, zfail, zpass);
 }
 
 void glStencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glStencilOpSeparate(face, sfail, dpfail, dppass);
 }
 
 void glTexBuffer(GLenum target, GLenum internalformat, GLuint buffer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexBuffer(target, internalformat, buffer);
 }
 
 void glTexCoord1d(GLdouble s) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord1d(s);
 }
 
 void glTexCoord1dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord1dv(v);
 }
 
 void glTexCoord1f(GLfloat s) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord1f(s);
 }
 
 void glTexCoord1fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord1fv(v);
 }
 
 void glTexCoord1i(GLint s) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord1i(s);
 }
 
 void glTexCoord1iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord1iv(v);
 }
 
 void glTexCoord1s(GLshort s) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord1s(s);
 }
 
 void glTexCoord1sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord1sv(v);
 }
 
 void glTexCoord2d(GLdouble s, GLdouble t) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord2d(s, t);
 }
 
 void glTexCoord2dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord2dv(v);
 }
 
 void glTexCoord2f(GLfloat s, GLfloat t) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord2f(s, t);
 }
 
 void glTexCoord2fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord2fv(v);
 }
 
 void glTexCoord2i(GLint s, GLint t) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord2i(s, t);
 }
 
 void glTexCoord2iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord2iv(v);
 }
 
 void glTexCoord2s(GLshort s, GLshort t) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord2s(s, t);
 }
 
 void glTexCoord2sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord2sv(v);
 }
 
 void glTexCoord3d(GLdouble s, GLdouble t, GLdouble r) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord3d(s, t, r);
 }
 
 void glTexCoord3dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord3dv(v);
 }
 
 void glTexCoord3f(GLfloat s, GLfloat t, GLfloat r) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord3f(s, t, r);
 }
 
 void glTexCoord3fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord3fv(v);
 }
 
 void glTexCoord3i(GLint s, GLint t, GLint r) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord3i(s, t, r);
 }
 
 void glTexCoord3iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord3iv(v);
 }
 
 void glTexCoord3s(GLshort s, GLshort t, GLshort r) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord3s(s, t, r);
 }
 
 void glTexCoord3sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord3sv(v);
 }
 
 void glTexCoord4d(GLdouble s, GLdouble t, GLdouble r, GLdouble q) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord4d(s, t, r, q);
 }
 
 void glTexCoord4dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord4dv(v);
 }
 
 void glTexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord4f(s, t, r, q);
 }
 
 void glTexCoord4fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord4fv(v);
 }
 
 void glTexCoord4i(GLint s, GLint t, GLint r, GLint q) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord4i(s, t, r, q);
 }
 
 void glTexCoord4iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord4iv(v);
 }
 
 void glTexCoord4s(GLshort s, GLshort t, GLshort r, GLshort q) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord4s(s, t, r, q);
 }
 
 void glTexCoord4sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoord4sv(v);
 }
 
 void glTexCoordP1ui(GLenum type, GLuint coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoordP1ui(type, coords);
 }
 
 void glTexCoordP1uiv(GLenum type, const GLuint * coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoordP1uiv(type, coords);
 }
 
 void glTexCoordP2ui(GLenum type, GLuint coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoordP2ui(type, coords);
 }
 
 void glTexCoordP2uiv(GLenum type, const GLuint * coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoordP2uiv(type, coords);
 }
 
 void glTexCoordP3ui(GLenum type, GLuint coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoordP3ui(type, coords);
 }
 
 void glTexCoordP3uiv(GLenum type, const GLuint * coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoordP3uiv(type, coords);
 }
 
 void glTexCoordP4ui(GLenum type, GLuint coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoordP4ui(type, coords);
 }
 
 void glTexCoordP4uiv(GLenum type, const GLuint * coords) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoordP4uiv(type, coords);
 }
 
 void glTexCoordPointer(GLint size, GLenum type, GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexCoordPointer(size, type, stride, pointer);
 }
 
 void glTexEnvf(GLenum target, GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexEnvf(target, pname, param);
 }
 
 void glTexEnvfv(GLenum target, GLenum pname, const GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexEnvfv(target, pname, params);
 }
 
 void glTexEnvi(GLenum target, GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexEnvi(target, pname, param);
 }
 
 void glTexEnviv(GLenum target, GLenum pname, const GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexEnviv(target, pname, params);
 }
 
 void glTexGend(GLenum coord, GLenum pname, GLdouble param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexGend(coord, pname, param);
 }
 
 void glTexGendv(GLenum coord, GLenum pname, const GLdouble * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexGendv(coord, pname, params);
 }
 
 void glTexGenf(GLenum coord, GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexGenf(coord, pname, param);
 }
 
 void glTexGenfv(GLenum coord, GLenum pname, const GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexGenfv(coord, pname, params);
 }
 
 void glTexGeni(GLenum coord, GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexGeni(coord, pname, param);
 }
 
 void glTexGeniv(GLenum coord, GLenum pname, const GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexGeniv(coord, pname, params);
 }
 
 void glTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, const void * pixels) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
 }
 
 void glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void * pixels) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
 }
 
 void glTexImage2DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexImage2DMultisample(target, samples, internalformat, width, height, fixedsamplelocations);
 }
 
 void glTexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const void * pixels) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, pixels);
 }
 
 void glTexImage3DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexImage3DMultisample(target, samples, internalformat, width, height, depth, fixedsamplelocations);
 }
 
 void glTexParameterIiv(GLenum target, GLenum pname, const GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexParameterIiv(target, pname, params);
 }
 
 void glTexParameterIuiv(GLenum target, GLenum pname, const GLuint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexParameterIuiv(target, pname, params);
 }
 
 void glTexParameterf(GLenum target, GLenum pname, GLfloat param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexParameterf(target, pname, param);
 }
 
 void glTexParameterfv(GLenum target, GLenum pname, const GLfloat * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexParameterfv(target, pname, params);
 }
 
 void glTexParameteri(GLenum target, GLenum pname, GLint param) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexParameteri(target, pname, param);
 }
 
 void glTexParameteriv(GLenum target, GLenum pname, const GLint * params) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexParameteriv(target, pname, params);
 }
 
 void glTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const void * pixels) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexSubImage1D(target, level, xoffset, width, format, type, pixels);
 }
 
 void glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void * pixels) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
 }
 
 void glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void * pixels) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
 }
 
 void glTransformFeedbackVaryings(GLuint program, GLsizei count, const GLchar *const* varyings, GLenum bufferMode) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTransformFeedbackVaryings(program, count, varyings, bufferMode);
 }
 
 void glTranslated(GLdouble x, GLdouble y, GLdouble z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTranslated(x, y, z);
 }
 
 void glTranslatef(GLfloat x, GLfloat y, GLfloat z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glTranslatef(x, y, z);
 }
 
 void glUniform1d(GLint location, GLdouble x) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform1d(location, x);
 }
 
 void glUniform1dv(GLint location, GLsizei count, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform1dv(location, count, value);
 }
 
 void glUniform1f(GLint location, GLfloat v0) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform1f(location, v0);
 }
 
 void glUniform1fv(GLint location, GLsizei count, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform1fv(location, count, value);
 }
 
 void glUniform1i(GLint location, GLint v0) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform1i(location, v0);
 }
 
 void glUniform1iv(GLint location, GLsizei count, const GLint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform1iv(location, count, value);
 }
 
 void glUniform1ui(GLint location, GLuint v0) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform1ui(location, v0);
 }
 
 void glUniform1uiv(GLint location, GLsizei count, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform1uiv(location, count, value);
 }
 
 void glUniform2d(GLint location, GLdouble x, GLdouble y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform2d(location, x, y);
 }
 
 void glUniform2dv(GLint location, GLsizei count, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform2dv(location, count, value);
 }
 
 void glUniform2f(GLint location, GLfloat v0, GLfloat v1) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform2f(location, v0, v1);
 }
 
 void glUniform2fv(GLint location, GLsizei count, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform2fv(location, count, value);
 }
 
 void glUniform2i(GLint location, GLint v0, GLint v1) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform2i(location, v0, v1);
 }
 
 void glUniform2iv(GLint location, GLsizei count, const GLint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform2iv(location, count, value);
 }
 
 void glUniform2ui(GLint location, GLuint v0, GLuint v1) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform2ui(location, v0, v1);
 }
 
 void glUniform2uiv(GLint location, GLsizei count, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform2uiv(location, count, value);
 }
 
 void glUniform3d(GLint location, GLdouble x, GLdouble y, GLdouble z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform3d(location, x, y, z);
 }
 
 void glUniform3dv(GLint location, GLsizei count, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform3dv(location, count, value);
 }
 
 void glUniform3f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform3f(location, v0, v1, v2);
 }
 
 void glUniform3fv(GLint location, GLsizei count, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform3fv(location, count, value);
 }
 
 void glUniform3i(GLint location, GLint v0, GLint v1, GLint v2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform3i(location, v0, v1, v2);
 }
 
 void glUniform3iv(GLint location, GLsizei count, const GLint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform3iv(location, count, value);
 }
 
 void glUniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform3ui(location, v0, v1, v2);
 }
 
 void glUniform3uiv(GLint location, GLsizei count, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform3uiv(location, count, value);
 }
 
 void glUniform4d(GLint location, GLdouble x, GLdouble y, GLdouble z, GLdouble w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform4d(location, x, y, z, w);
 }
 
 void glUniform4dv(GLint location, GLsizei count, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform4dv(location, count, value);
 }
 
 void glUniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform4f(location, v0, v1, v2, v3);
 }
 
 void glUniform4fv(GLint location, GLsizei count, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform4fv(location, count, value);
 }
 
 void glUniform4i(GLint location, GLint v0, GLint v1, GLint v2, GLint v3) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform4i(location, v0, v1, v2, v3);
 }
 
 void glUniform4iv(GLint location, GLsizei count, const GLint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform4iv(location, count, value);
 }
 
 void glUniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform4ui(location, v0, v1, v2, v3);
 }
 
 void glUniform4uiv(GLint location, GLsizei count, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniform4uiv(location, count, value);
 }
 
 void glUniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformBlockBinding(program, uniformBlockIndex, uniformBlockBinding);
 }
 
 void glUniformMatrix2dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix2dv(location, count, transpose, value);
 }
 
 void glUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix2fv(location, count, transpose, value);
 }
 
 void glUniformMatrix2x3dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix2x3dv(location, count, transpose, value);
 }
 
 void glUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix2x3fv(location, count, transpose, value);
 }
 
 void glUniformMatrix2x4dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix2x4dv(location, count, transpose, value);
 }
 
 void glUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix2x4fv(location, count, transpose, value);
 }
 
 void glUniformMatrix3dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix3dv(location, count, transpose, value);
 }
 
 void glUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix3fv(location, count, transpose, value);
 }
 
 void glUniformMatrix3x2dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix3x2dv(location, count, transpose, value);
 }
 
 void glUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix3x2fv(location, count, transpose, value);
 }
 
 void glUniformMatrix3x4dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix3x4dv(location, count, transpose, value);
 }
 
 void glUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix3x4fv(location, count, transpose, value);
 }
 
 void glUniformMatrix4dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix4dv(location, count, transpose, value);
 }
 
 void glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix4fv(location, count, transpose, value);
 }
 
 void glUniformMatrix4x2dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix4x2dv(location, count, transpose, value);
 }
 
 void glUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix4x2fv(location, count, transpose, value);
 }
 
 void glUniformMatrix4x3dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix4x3dv(location, count, transpose, value);
 }
 
 void glUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformMatrix4x3fv(location, count, transpose, value);
 }
 
 void glUniformSubroutinesuiv(GLenum shadertype, GLsizei count, const GLuint * indices) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUniformSubroutinesuiv(shadertype, count, indices);
 }
 
 GLboolean glUnmapBuffer(GLenum target) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     return proc_glUnmapBuffer(target);
 }
 
 void glUseProgram(GLuint program) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glUseProgram(program);
 }
 
 void glValidateProgram(GLuint program) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glValidateProgram(program);
 }
 
 void glVertex2d(GLdouble x, GLdouble y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex2d(x, y);
 }
 
 void glVertex2dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex2dv(v);
 }
 
 void glVertex2f(GLfloat x, GLfloat y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex2f(x, y);
 }
 
 void glVertex2fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex2fv(v);
 }
 
 void glVertex2i(GLint x, GLint y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex2i(x, y);
 }
 
 void glVertex2iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex2iv(v);
 }
 
 void glVertex2s(GLshort x, GLshort y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex2s(x, y);
 }
 
 void glVertex2sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex2sv(v);
 }
 
 void glVertex3d(GLdouble x, GLdouble y, GLdouble z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex3d(x, y, z);
 }
 
 void glVertex3dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex3dv(v);
 }
 
 void glVertex3f(GLfloat x, GLfloat y, GLfloat z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex3f(x, y, z);
 }
 
 void glVertex3fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex3fv(v);
 }
 
 void glVertex3i(GLint x, GLint y, GLint z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex3i(x, y, z);
 }
 
 void glVertex3iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex3iv(v);
 }
 
 void glVertex3s(GLshort x, GLshort y, GLshort z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex3s(x, y, z);
 }
 
 void glVertex3sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex3sv(v);
 }
 
 void glVertex4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex4d(x, y, z, w);
 }
 
 void glVertex4dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex4dv(v);
 }
 
 void glVertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex4f(x, y, z, w);
 }
 
 void glVertex4fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex4fv(v);
 }
 
 void glVertex4i(GLint x, GLint y, GLint z, GLint w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex4i(x, y, z, w);
 }
 
 void glVertex4iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex4iv(v);
 }
 
 void glVertex4s(GLshort x, GLshort y, GLshort z, GLshort w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex4s(x, y, z, w);
 }
 
 void glVertex4sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertex4sv(v);
 }
 
 void glVertexAttrib1d(GLuint index, GLdouble x) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib1d(index, x);
 }
 
 void glVertexAttrib1dv(GLuint index, const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib1dv(index, v);
 }
 
 void glVertexAttrib1f(GLuint index, GLfloat x) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib1f(index, x);
 }
 
 void glVertexAttrib1fv(GLuint index, const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib1fv(index, v);
 }
 
 void glVertexAttrib1s(GLuint index, GLshort x) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib1s(index, x);
 }
 
 void glVertexAttrib1sv(GLuint index, const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib1sv(index, v);
 }
 
 void glVertexAttrib2d(GLuint index, GLdouble x, GLdouble y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib2d(index, x, y);
 }
 
 void glVertexAttrib2dv(GLuint index, const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib2dv(index, v);
 }
 
 void glVertexAttrib2f(GLuint index, GLfloat x, GLfloat y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib2f(index, x, y);
 }
 
 void glVertexAttrib2fv(GLuint index, const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib2fv(index, v);
 }
 
 void glVertexAttrib2s(GLuint index, GLshort x, GLshort y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib2s(index, x, y);
 }
 
 void glVertexAttrib2sv(GLuint index, const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib2sv(index, v);
 }
 
 void glVertexAttrib3d(GLuint index, GLdouble x, GLdouble y, GLdouble z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib3d(index, x, y, z);
 }
 
 void glVertexAttrib3dv(GLuint index, const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib3dv(index, v);
 }
 
 void glVertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib3f(index, x, y, z);
 }
 
 void glVertexAttrib3fv(GLuint index, const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib3fv(index, v);
 }
 
 void glVertexAttrib3s(GLuint index, GLshort x, GLshort y, GLshort z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib3s(index, x, y, z);
 }
 
 void glVertexAttrib3sv(GLuint index, const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib3sv(index, v);
 }
 
 void glVertexAttrib4Nbv(GLuint index, const GLbyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4Nbv(index, v);
 }
 
 void glVertexAttrib4Niv(GLuint index, const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4Niv(index, v);
 }
 
 void glVertexAttrib4Nsv(GLuint index, const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4Nsv(index, v);
 }
 
 void glVertexAttrib4Nub(GLuint index, GLubyte x, GLubyte y, GLubyte z, GLubyte w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4Nub(index, x, y, z, w);
 }
 
 void glVertexAttrib4Nubv(GLuint index, const GLubyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4Nubv(index, v);
 }
 
 void glVertexAttrib4Nuiv(GLuint index, const GLuint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4Nuiv(index, v);
 }
 
 void glVertexAttrib4Nusv(GLuint index, const GLushort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4Nusv(index, v);
 }
 
 void glVertexAttrib4bv(GLuint index, const GLbyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4bv(index, v);
 }
 
 void glVertexAttrib4d(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4d(index, x, y, z, w);
 }
 
 void glVertexAttrib4dv(GLuint index, const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4dv(index, v);
 }
 
 void glVertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4f(index, x, y, z, w);
 }
 
 void glVertexAttrib4fv(GLuint index, const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4fv(index, v);
 }
 
 void glVertexAttrib4iv(GLuint index, const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4iv(index, v);
 }
 
 void glVertexAttrib4s(GLuint index, GLshort x, GLshort y, GLshort z, GLshort w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4s(index, x, y, z, w);
 }
 
 void glVertexAttrib4sv(GLuint index, const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4sv(index, v);
 }
 
 void glVertexAttrib4ubv(GLuint index, const GLubyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4ubv(index, v);
 }
 
 void glVertexAttrib4uiv(GLuint index, const GLuint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4uiv(index, v);
 }
 
 void glVertexAttrib4usv(GLuint index, const GLushort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttrib4usv(index, v);
 }
 
 void glVertexAttribDivisor(GLuint index, GLuint divisor) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribDivisor(index, divisor);
 }
 
 void glVertexAttribI1i(GLuint index, GLint x) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI1i(index, x);
 }
 
 void glVertexAttribI1iv(GLuint index, const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI1iv(index, v);
 }
 
 void glVertexAttribI1ui(GLuint index, GLuint x) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI1ui(index, x);
 }
 
 void glVertexAttribI1uiv(GLuint index, const GLuint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI1uiv(index, v);
 }
 
 void glVertexAttribI2i(GLuint index, GLint x, GLint y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI2i(index, x, y);
 }
 
 void glVertexAttribI2iv(GLuint index, const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI2iv(index, v);
 }
 
 void glVertexAttribI2ui(GLuint index, GLuint x, GLuint y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI2ui(index, x, y);
 }
 
 void glVertexAttribI2uiv(GLuint index, const GLuint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI2uiv(index, v);
 }
 
 void glVertexAttribI3i(GLuint index, GLint x, GLint y, GLint z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI3i(index, x, y, z);
 }
 
 void glVertexAttribI3iv(GLuint index, const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI3iv(index, v);
 }
 
 void glVertexAttribI3ui(GLuint index, GLuint x, GLuint y, GLuint z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI3ui(index, x, y, z);
 }
 
 void glVertexAttribI3uiv(GLuint index, const GLuint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI3uiv(index, v);
 }
 
 void glVertexAttribI4bv(GLuint index, const GLbyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI4bv(index, v);
 }
 
 void glVertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI4i(index, x, y, z, w);
 }
 
 void glVertexAttribI4iv(GLuint index, const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI4iv(index, v);
 }
 
 void glVertexAttribI4sv(GLuint index, const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI4sv(index, v);
 }
 
 void glVertexAttribI4ubv(GLuint index, const GLubyte * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI4ubv(index, v);
 }
 
 void glVertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI4ui(index, x, y, z, w);
 }
 
 void glVertexAttribI4uiv(GLuint index, const GLuint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI4uiv(index, v);
 }
 
 void glVertexAttribI4usv(GLuint index, const GLushort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribI4usv(index, v);
 }
 
 void glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribIPointer(index, size, type, stride, pointer);
 }
 
 void glVertexAttribP1ui(GLuint index, GLenum type, GLboolean normalized, GLuint value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribP1ui(index, type, normalized, value);
 }
 
 void glVertexAttribP1uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribP1uiv(index, type, normalized, value);
 }
 
 void glVertexAttribP2ui(GLuint index, GLenum type, GLboolean normalized, GLuint value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribP2ui(index, type, normalized, value);
 }
 
 void glVertexAttribP2uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribP2uiv(index, type, normalized, value);
 }
 
 void glVertexAttribP3ui(GLuint index, GLenum type, GLboolean normalized, GLuint value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribP3ui(index, type, normalized, value);
 }
 
 void glVertexAttribP3uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribP3uiv(index, type, normalized, value);
 }
 
 void glVertexAttribP4ui(GLuint index, GLenum type, GLboolean normalized, GLuint value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribP4ui(index, type, normalized, value);
 }
 
 void glVertexAttribP4uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribP4uiv(index, type, normalized, value);
 }
 
 void glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexAttribPointer(index, size, type, normalized, stride, pointer);
 }
 
 void glVertexP2ui(GLenum type, GLuint value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexP2ui(type, value);
 }
 
 void glVertexP2uiv(GLenum type, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexP2uiv(type, value);
 }
 
 void glVertexP3ui(GLenum type, GLuint value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexP3ui(type, value);
 }
 
 void glVertexP3uiv(GLenum type, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexP3uiv(type, value);
 }
 
 void glVertexP4ui(GLenum type, GLuint value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexP4ui(type, value);
 }
 
 void glVertexP4uiv(GLenum type, const GLuint * value) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexP4uiv(type, value);
 }
 
 void glVertexPointer(GLint size, GLenum type, GLsizei stride, const void * pointer) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glVertexPointer(size, type, stride, pointer);
 }
 
 void glViewport(GLint x, GLint y, GLsizei width, GLsizei height) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glViewport(x, y, width, height);
 }
 
 void glWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWaitSync(sync, flags, timeout);
 }
 
 void glWindowPos2d(GLdouble x, GLdouble y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos2d(x, y);
 }
 
 void glWindowPos2dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos2dv(v);
 }
 
 void glWindowPos2f(GLfloat x, GLfloat y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos2f(x, y);
 }
 
 void glWindowPos2fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos2fv(v);
 }
 
 void glWindowPos2i(GLint x, GLint y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos2i(x, y);
 }
 
 void glWindowPos2iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos2iv(v);
 }
 
 void glWindowPos2s(GLshort x, GLshort y) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos2s(x, y);
 }
 
 void glWindowPos2sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos2sv(v);
 }
 
 void glWindowPos3d(GLdouble x, GLdouble y, GLdouble z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos3d(x, y, z);
 }
 
 void glWindowPos3dv(const GLdouble * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos3dv(v);
 }
 
 void glWindowPos3f(GLfloat x, GLfloat y, GLfloat z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos3f(x, y, z);
 }
 
 void glWindowPos3fv(const GLfloat * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos3fv(v);
 }
 
 void glWindowPos3i(GLint x, GLint y, GLint z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos3i(x, y, z);
 }
 
 void glWindowPos3iv(const GLint * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos3iv(v);
 }
 
 void glWindowPos3s(GLshort x, GLshort y, GLshort z) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos3s(x, y, z);
 }
 
 void glWindowPos3sv(const GLshort * v) {
-    if (libgl == NULL) { load_gl_shims(); }
+    call_once(&libgl_init, load_gl_shims);
 
     proc_glWindowPos3sv(v);
 }
