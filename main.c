@@ -49,6 +49,34 @@ void init(void) {
             }
         }
     };
+
+    ImGuiIO *io = igGetIO();
+
+    io->BackendPlatformName = "sokol_app";
+
+    sg_backend backend = sg_query_backend();
+    switch (backend) {
+        case SG_BACKEND_GLCORE:
+            io->BackendRendererName = "sokol_gfx_glcore";
+            break;
+        case SG_BACKEND_GLES3:
+            io->BackendRendererName = "sokol_gfx_gles3";
+            break;
+        case SG_BACKEND_D3D11:
+            io->BackendRendererName = "sokol_gfx_d3d11";
+            break;
+        case SG_BACKEND_METAL_IOS:
+        case SG_BACKEND_METAL_MACOS:
+        case SG_BACKEND_METAL_SIMULATOR:
+            io->BackendRendererName = "sokol_gfx_metal";
+            break;
+        case SG_BACKEND_WGPU:
+            io->BackendRendererName = "sokol_gfx_wgpu";
+            break;
+        case SG_BACKEND_DUMMY:
+            io->BackendRendererName = "sokol_gfx_dummy";
+            break;
+    }
 }
 
 void frame(void) {
