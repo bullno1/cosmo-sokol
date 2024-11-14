@@ -50,10 +50,11 @@ def main():
         f.write(textwrap.dedent("""
         #include <GL/gl.h>
         #include <stddef.h>
+        #include <threads.h>
         #include <dlfcn.h>
         #pragma GCC diagnostic ignored "-Warray-parameter"
 
-        static void* libgl = NULL;
+        static once_flag libgl_init = {0};
 
         """).lstrip())
 
@@ -69,7 +70,7 @@ def main():
         # Loader
         f.write(textwrap.dedent("""
         static void load_gl_shims(void) {
-            libgl = cosmo_dlopen("libgl.so", RTLD_NOW | RTLD_GLOBAL);
+            void* libgl = cosmo_dlopen("libgl.so", RTLD_NOW | RTLD_GLOBAL);
         """))
         for command_spec in command_specs:
             name = command_spec['name']
@@ -84,7 +85,7 @@ def main():
 
             f.write(textwrap.dedent(f"""
             {return_type} {name}({arg_list(params)}) {{
-                if (libgl == NULL) {{ load_gl_shims(); }}
+                call_once(&libgl_init, load_gl_shims);
 
                 { 'return ' if return_type != 'void' else '' }proc_{name}({forward_list(params)});
             }}

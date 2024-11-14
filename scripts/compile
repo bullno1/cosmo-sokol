@@ -11,10 +11,10 @@ then
 	mkdir -p $(dirname "$object")
 	case "$source" in
 		*.c)
-			exec cosmocc $flags -c "$source" -o "$object"
+			exec $COSMOS/bin/cosmocc $flags -c "$source" -o "$object"
 			;;
 		*.cpp)
-			exec cosmoc++ $flags -c "$source" -o "$object"
+			exec $COSMOS/bin/cosmoc++ $flags -c "$source" -o "$object"
 			;;
 		*)
 			echo "Cannot compile $source"

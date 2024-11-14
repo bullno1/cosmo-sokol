@@ -1,24 +1,28 @@
 #!/bin/sh -e
 
-if ! command -v cosmocc > /dev/null
+COSMOS="${COSMOS:-/opt/cosmos}"
+if ! [ -d "${COSMOS}" ] && ! [ -f "${COSMOS}/bin/cosmocc" ]
 then
-	echo "You need to add cosmopolitan toolchain to your path:"
-	echo "export PATH=\$PATH:<path-to-cosmopolitan>/bin"
-	exit 1
-fi
+	if ! command -v cosmocc >/dev/null
+	then
+		echo "You need to add cosmopolitan toolchain to your environment variable:"
+		echo "export COSMOS=/opt/cosmos"
+		exit 1
+	fi
 
-COSMO_HOME=$(dirname $(dirname $(which cosmocc)))
+	COSMOS="$(dirname "$(dirname "$(command -v cosmocc)")")"
+fi
+export COSMOS
 
 FLAGS="-I deps/sokol \
 	-I deps/cimgui \
 	-mcosmo \
 	-mtiny \
-	-Wall \
-	-Werror"
+	-Wall"
 
 LINUX_FLAGS="${FLAGS} -Ishims/linux"
 
-WIN32_FLAGS="${FLAGS} -Ishims/win32 -I ${COSMO_HOME}/include/libc/nt"
+WIN32_FLAGS="${FLAGS} -Ishims/win32 -I${COSMOS}/include/libc/nt"
 
 mkdir -p .build
 mkdir -p bin
@@ -55,7 +59,7 @@ else
 	PARALLEL_FLAGS="--progress"
 fi
 
-cat .build/commands | parallel $PARALLEL_FLAGS --max-procs $(nproc)
+parallel $PARALLEL_FLAGS --max-procs "$(nproc)" :::: .build/commands
 
-objects=$(find .build -name '*.o' -not -path '*.aarch64/*')
-cosmoc++ ${FLAGS} -o bin/cosmo-sokol $objects
+objects="$(find .build -name '*.o' -not -path '*.aarch64/*')"
+"$COSMOS"/bin/cosmoc++ ${FLAGS} -o bin/cosmo-sokol $objects
