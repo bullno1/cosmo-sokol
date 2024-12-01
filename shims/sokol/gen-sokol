@@ -101,7 +101,7 @@ SOKOL_FUNCTIONS = [
     "void sg_apply_scissor_rectf(float x, float y, float width, float height, bool origin_top_left)",
     "void sg_apply_pipeline(sg_pipeline pip)",
     "void sg_apply_bindings(const sg_bindings* bindings)",
-    "void sg_apply_uniforms(sg_shader_stage stage, int ub_index, const sg_range* data)",
+    "void sg_apply_uniforms(int ub_slot, const sg_range* data)",
     "void sg_draw(int base_element, int num_elements, int num_instances)",
     "void sg_end_pass()",
     "void sg_commit()",
