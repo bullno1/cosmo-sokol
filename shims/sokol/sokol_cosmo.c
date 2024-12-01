@@ -1107,15 +1107,15 @@ void sg_apply_bindings(const sg_bindings* bindings) {
     }
 }
 
-extern void linux_sg_apply_uniforms(sg_shader_stage stage, int ub_index, const sg_range* data);
-extern void windows_sg_apply_uniforms(sg_shader_stage stage, int ub_index, const sg_range* data);
-void sg_apply_uniforms(sg_shader_stage stage, int ub_index, const sg_range* data) {
+extern void linux_sg_apply_uniforms(int ub_slot, const sg_range* data);
+extern void windows_sg_apply_uniforms(int ub_slot, const sg_range* data);
+void sg_apply_uniforms(int ub_slot, const sg_range* data) {
     if (IsLinux()) {
-        linux_sg_apply_uniforms(stage, ub_index, data);
+        linux_sg_apply_uniforms(ub_slot, data);
         return;
     }
     if (IsWindows()) {
-        windows_sg_apply_uniforms(stage, ub_index, data);
+        windows_sg_apply_uniforms(ub_slot, data);
         return;
     }
 }
